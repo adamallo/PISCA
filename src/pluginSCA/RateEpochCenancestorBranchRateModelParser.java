@@ -1,0 +1,155 @@
+/*
+ * RateEpochCenancestorBranchRateModelParser.java
+ *
+ * Modified by Diego Mallo from RateEpochBranchRateModelParser.java
+ *
+ * Copyright (c) 2002-2015 Alexei Drummond, Andrew Rambaut and Marc Suchard
+ *
+ * This file is part of BEAST.
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership and licensing.
+ *
+ * BEAST is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ *  BEAST is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with BEAST; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA  02110-1301  USA
+ */
+
+package pluginSCA;
+
+import dr.evomodelxml.tree.TreeModelParser;
+import dr.inference.model.Parameter;
+import dr.xml.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Logger;
+
+/**
+ */
+public class RateEpochCenancestorBranchRateModelParser extends AbstractXMLObjectParser {
+
+    public static final String RATE_EPOCH_CENANCESTOR_BRANCH_RATES = "rateCenancestorEpochBranchRates";
+    public static final String RATE = "rate";
+    public static final String EPOCH = "epoch";
+    public static final String TRANSITION_TIME = "transitionTime";
+    public static final String CONTINUOUS_NORMALIZATION = "continuousNormalization";
+
+    public String getParserName() {
+        return RATE_EPOCH_CENANCESTOR_BRANCH_RATES;
+    }
+
+    public Object parseXMLObject(XMLObject xo) throws XMLParseException {
+
+        Logger.getLogger("dr.evomodel").info("Using cenancestor multi-epoch rate model.");
+
+        List<Epoch> epochs = new ArrayList<Epoch>();
+
+        for (int i = 0; i < xo.getChildCount(); i++) {
+            XMLObject xoc = (XMLObject) xo.getChild(i);
+            if (xoc.getName().equals(EPOCH)) {
+                double t = xoc.getAttribute(TRANSITION_TIME, 0.0);
+
+                Parameter p = (Parameter) xoc.getChild(Parameter.class);
+
+                Parameter tt = null;
+                if (xoc.hasChildNamed(TRANSITION_TIME)) {
+                    tt = (Parameter) xoc.getElementFirstChild(TRANSITION_TIME);
+                }
+                epochs.add(new Epoch(t, p, tt));
+            }
+        }
+
+        Parameter ancestralRateParameter = (Parameter) xo.getElementFirstChild(RATE);
+
+        Collections.sort(epochs);
+        Parameter[] rateParameters = new Parameter[epochs.size() + 1];
+        Parameter[] timeParameters = new Parameter[epochs.size()];
+
+        int i = 0;
+        for (Epoch epoch : epochs) {
+            rateParameters[i] = epoch.rateParameter;
+            if (epoch.timeParameter != null) {
+                timeParameters[i] = epoch.timeParameter;
+            } else {
+                timeParameters[i] = new Parameter.Default(1);
+                timeParameters[i].setParameterValue(0, epoch.transitionTime);
+            }
+            i++;
+        }
+        rateParameters[i] = ancestralRateParameter;
+
+        if (xo.hasAttribute(CONTINUOUS_NORMALIZATION) && xo.getBooleanAttribute(CONTINUOUS_NORMALIZATION)) {
+            Parameter rootHeight = (Parameter) xo.getChild(TreeModelParser.ROOT_HEIGHT).getChild(Parameter.class);
+            return new ContinuousEpochCenancestorBranchRateModel(timeParameters, rateParameters, rootHeight);
+        }
+
+        return new RateEpochCenancestorBranchRateModel(timeParameters, rateParameters);
+    }
+
+    class Epoch implements Comparable {
+
+        private final double transitionTime;
+        private final Parameter rateParameter;
+        private final Parameter timeParameter;
+
+        public Epoch(double transitionTime, Parameter rateParameter, Parameter timeParameter) {
+            this.transitionTime = transitionTime;
+            this.rateParameter = rateParameter;
+            this.timeParameter = timeParameter;
+        }
+
+        public int compareTo(Object o) {
+            return Double.compare(transitionTime, ((Epoch) o).transitionTime);
+        }
+
+    }
+    //************************************************************************
+    // AbstractXMLObjectParser implementation
+    //************************************************************************
+
+    public String getParserDescription() {
+        return "This element provides a multiple epoch molecular clock model. " +
+                        "All branches (or portions of them) have the same rate of molecular " +
+                        "evolution within a given epoch. If parameters are used to sample " +
+                        "transition times, these must be kept in ascending order by judicious " +
+                        "use of bounds or priors.";
+    }
+
+    public Class getReturnType() {
+        return RateEpochCenancestorBranchRateModel.class;
+    }
+
+    public XMLSyntaxRule[] getSyntaxRules() {
+        return rules;
+    }
+
+    private final XMLSyntaxRule[] rules = {
+            new ElementRule(EPOCH,
+                    new XMLSyntaxRule[]{
+                            AttributeRule.newDoubleRule(TRANSITION_TIME, true, "The time of transition between this epoch and the previous one"),
+                            new ElementRule(Parameter.class, "The evolutionary rate parameter for this epoch"),
+                            new ElementRule(TRANSITION_TIME, Parameter.class, "The transition time parameter for this epoch", true)
+                    }, "An epoch that lasts until transitionTime",
+                    1, Integer.MAX_VALUE
+            ),
+            new ElementRule(RATE, Parameter.class, "The ancestral molecular evolutionary rate parameter", false),
+            AttributeRule.newBooleanRule(CONTINUOUS_NORMALIZATION, true, "Special rate normalization for a Brownian diffusion process"),
+            new ElementRule(TreeModelParser.ROOT_HEIGHT,
+                    new XMLSyntaxRule[]{
+                            new ElementRule(Parameter.class, "The tree root height")
+                    }, "Parameterization may require the root height", 0, 1)
+    };
+
+}
