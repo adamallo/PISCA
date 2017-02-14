@@ -1,3 +1,7 @@
+beast_sdk.properties
+
+build
+dist
 *.class
 
 # Mobile Tools for Java (J2ME)
