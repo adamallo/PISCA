@@ -1,4 +1,4 @@
-<project name="pluginSCA" default="all" basedir=".">
+<project name="PISCA" default="all" basedir=".">
     <description> Plugin to perform phylogenetic estimation using somatic chromosomal alterations in BEAST</description>
     <property file="beast_sdk.properties"/>
     <property file="${user.home}/.ant-global.properties"/>
@@ -19,11 +19,11 @@
     
     <!-- the following 2 properties will be changed for every plugin that you write -->
       <!-- the plugin-class is the class that implements dr.app.plugin.Plugin -->
-    <property name="plugin-class" value="pluginSCALoader"/>
+    <property name="plugin-class" value="PISCALoader"/>
       <!-- the plugin-package is the package that contains your plugin-class -->
-    <property name="plugin-package" value="pluginSCA"/>
+    <property name="plugin-package" value="PISCA"/>
       <!-- plugin-jar name should list the fully qualified name to your plugin class -->
-    <property name="plugin-jar" value="pluginSCA.pluginSCALoader.jar"/>
+    <property name="plugin-jar" value="PISCA.PISCALoader.jar"/>
 
     <property environment="env"/>
 

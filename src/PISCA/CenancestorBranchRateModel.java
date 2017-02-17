@@ -25,7 +25,7 @@
  * Boston, MA  02110-1301  USA
  */
 
-package pluginSCA;
+package PISCA;
 
 import dr.evomodel.branchratemodel.BranchRateModel;
 import dr.inference.model.Parameter;

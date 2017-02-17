@@ -23,7 +23,7 @@
  * Boston, MA  02110-1301  USA
  */
 
-package pluginSCA;
+package PISCA;
 
 import dr.evolution.tree.NodeRef;
 import dr.evolution.tree.Tree;

@@ -23,9 +23,9 @@
  * Boston, MA  02110-1301  USA
  */
 
-package pluginSCA;
+package PISCA;
 
-import pluginSCA.RateStatisticCenancestor;
+import PISCA.RateStatisticCenancestor;
 import dr.evolution.tree.Tree;
 import dr.evomodel.branchratemodel.BranchRateModel;
 import dr.evomodel.tree.RateStatistic;

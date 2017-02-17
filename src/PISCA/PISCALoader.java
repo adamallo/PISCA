@@ -1,11 +1,11 @@
-package pluginSCA;
+package PISCA;
 import java.lang.*;
 import java.util.*;
 
-import pluginSCA.*;
+import PISCA.*;
 import dr.app.plugin.*;
 import dr.xml.XMLObjectParser;
-public class pluginSCALoader implements Plugin {
+public class PISCALoader implements Plugin {
 
         public Set<XMLObjectParser> getParsers() {
                 

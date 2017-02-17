@@ -23,11 +23,11 @@
  * Boston, MA  02110-1301  USA
  */
 
-package pluginSCA;
+package PISCA;
 
 import dr.evolution.datatype.TwoStates;
 import dr.evolution.util.TaxonList;
-import pluginSCA.BinarySequenceErrorModelParser;
+import PISCA.BinarySequenceErrorModelParser;
 import dr.evomodel.treelikelihood.TipStatesModel;
 import dr.inference.model.Variable;
 import dr.inference.model.Parameter;

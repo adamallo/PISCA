@@ -23,10 +23,10 @@
  * Boston, MA  02110-1301  USA
  */
 
-package pluginSCA;
+package PISCA;
 
 import dr.evolution.util.TaxonList;
-import pluginSCA.BinarySequenceErrorModel;
+import PISCA.BinarySequenceErrorModel;
 import dr.inference.model.Variable;
 import dr.inference.model.Parameter;
 import dr.xml.*;

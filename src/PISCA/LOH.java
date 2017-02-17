@@ -25,12 +25,12 @@
 	 * Boston, MA  02110-1301  USA
 	 */
 	
-package pluginSCA;
+package PISCA;
 	
 import dr.inference.model.Parameter;
 import dr.inference.model.Variable;
 import dr.evolution.datatype.TwoStates;
-import pluginSCA.LOHParser;
+import PISCA.LOHParser;
 import dr.evomodel.substmodel.AbstractSubstitutionModel;
 import dr.evomodel.substmodel.FrequencyModel;
 	

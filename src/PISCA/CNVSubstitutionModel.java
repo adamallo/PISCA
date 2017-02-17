@@ -25,8 +25,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-package pluginSCA;
-import pluginSCA.CNVSubstitutionModelParser;
+package PISCA;
+import PISCA.CNVSubstitutionModelParser;
 import dr.evolution.datatype.DataType;
 import dr.inference.model.DuplicatedParameter;
 import dr.inference.model.Model;

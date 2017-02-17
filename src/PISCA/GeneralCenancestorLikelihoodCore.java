@@ -25,9 +25,9 @@
  * Boston, MA  02110-1301  USA
  */
 
-package pluginSCA;
+package PISCA;
 
-import pluginSCA.AbstractCenancestorLikelihoodCore;
+import PISCA.AbstractCenancestorLikelihoodCore;
 
 /**
  * GeneralLikelihoodCore - An implementation of LikelihoodCore for any data

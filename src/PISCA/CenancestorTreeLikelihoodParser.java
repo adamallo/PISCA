@@ -25,7 +25,7 @@
  * Boston, MA  02110-1301  USA
  */
 
-package pluginSCA;
+package PISCA;
 
 import dr.evolution.alignment.PatternList;
 import dr.evomodel.sitemodel.SiteModel;

@@ -23,11 +23,11 @@
  * Boston, MA  02110-1301  USA
  */
 
-package pluginSCA;
+package PISCA;
 
 import dr.evolution.tree.NodeRef;
 import dr.evolution.tree.Tree;
-import pluginSCA.RateStatisticCenancestorParser;
+import PISCA.RateStatisticCenancestorParser;
 import dr.evomodel.tree.TreeStatistic;
 import dr.inference.model.Parameter;
 import dr.inference.model.Statistic;
