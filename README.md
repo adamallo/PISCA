@@ -1,8 +1,25 @@
 # PISCA
-Plugin for BEAST 1.8.x in order to use somatic copy number alterations (SCA) to perform phylogenetic estimation.
+Phylogenetic Inference using Somatic Chromosomal Alterations. Plugin for BEAST 1.8.x.
+
+##Citation
+If you use this software, please cite:
+
+* Martinez P, Mallo D, Paulson TG, Li X, Sanchez CA, Reid BJ, Graham TA, Kuhner MK and Maley CC (_in prep_) Evolution of Barrett's Esophagus through space and time at single-crypt and whole-biopsy levels.
+* Kostadinov RL, Kuhner MK, Li X, et al. 2013. NSAIDs Modulate Clonal Evolution in Barrett’s Esophagus. PLoS Genet. 9.
+* Drummond AJ, Suchard MA, Xie D & Rambaut A (2012) Bayesian phylogenetics with BEAUti and the BEAST 1.7 Molecular Biology And Evolution 29: 1969-1973
+
+
+If you use the random local model, please cite:
+
+* Drummond AJ & Suchard MA (2010) Bayesian random local clocks, or one rate to rule them all. BMC Biology 8, 114
+
+If you use the ascertainment bias correction, please cite:
+
+* Alekseyenko AV, Lee C, Suchard MA (2008) Wagner and Dollo: a stochastic duet by composing two parsiminious solos. Systematic Biology. 57, 772-784
 
 ##Installation
-In order to install the compiled version of PISCA, execute the install.sh included in the package, indicating the root directory of your BEAST 1.8.X installation as the only argument. Example:
+In order to install the compiled version of PISCA, execute the install.sh included in the package, indicating the root directory of your BEAST 1.8.X installation as the only argument. 
+Example:
 
 ```
 ./install.sh ~/bin/beast1.8.3/
@@ -13,11 +30,13 @@ In order to install the compiled version of PISCA, execute the install.sh includ
 
 PISCA does not include a modified version of Beauti. Therefore, you will have to put together the input xml manually (not recommended) use an script or manually modify one made using Beauti. The script [generate_genotypes.pl](https://github.com/adamallo/scripts_singlecrypt/blob/master/generate_genotypes.pl) could be a good starting point.
 
+Below you can find the models implemented by PISCA and XML examples of their implementation.
+
 ##Included models
 The models are presented in the order they should appear in the xml file. The different clock models are different alternatives (only one can be used at a time) and are ordered by complexity.
 
-####CNV substitution matrix:
-It requires alignments with CNV states recoded as alphanumerical characters using a general data type like the following:
+####General data type for the CNV substitution model
+The CNV substitution model requires the usage of a specific generalDatatype. This has to be **specified before the alignments** and look like:
 
 ```
 <generalDataType id="cnv">
@@ -53,10 +72,11 @@ It requires alignments with CNV states recoded as alphanumerical characters usin
         <ambiguity code="?" states="@ABCDEFGHIJKLMNOPQRSTUVWXYZ["/>
 </generalDataType>
 ```
-**The data type must be specified before the alignments**
 
 ####Ascertainment correction bias:
-Corrects for the absence of a specific invariable state (in principle the wild-type) in the sequences. **Important: There cannot be invariable positions with the sate that is being corrected for in the alignment.** If some are being obtained, but most are lost and therefore they need to be corrected, those instances have to be trimmed from the alignment. The block structure is almost equivalent to the usual CharacterPatterns, with the addition of the parameter _state_ that indicates the missing invariable state that has to be corrected for.
+Corrects for the absence of a specific invariable state (in principle the wild-type) in the sequences. **Important: There cannot be invariable positions with the sate that is being corrected for in the alignment.** If some are present in the data (but most are lost and therefore they need to be corrected for) they must be trimmed from the alignment.
+
+The block structure is almost equivalent to the usual CharacterPatterns, with the addition of the parameter _state_ that indicates the missing invariable state that has to be corrected for (H is wildtype in the generalDataType used by our CNV substitution matrix).
  
 ```
 <ascertainedCharacterPatterns id="patterns">
@@ -65,5 +85,152 @@ Corrects for the absence of a specific invariable state (in principle the wild-t
 </ascertainedCharacterPatterns>
 ```
 ####Strict molecular clock:
+The strict molecular clock has the same format and parameters as the original strict clock, with a name change (strictClockCenancestorBranchRates). If it is going to be estimated, an appropriate prior and operators must be included. Below you can see an example of a fixed rate of 1 (not estimated). 
+
+```
+<strictClockCenancestorBranchRates id="branchRates">
+        <rate>
+                <parameter id="clock.rate" value="1"/>
+        </rate>
+</strictClockCenancestorBranchRates>
+```
+
 ####Random local clock:
-####Cenancestor likelihood:
+The random local clock and associated statistics have been adapted to the cenancestor-tree likelihood. However, their only change is their name (from randomLocalClockModel to randomLocalClockModelCenancestor), since their parameters, priors and operators are the same.
+
+Example:
+
+```
+<randomLocalClockModelCenancestor id="branchRates" ratesAreMultipliers="false">
+        <treeModel idref="treeModel"/>
+        <rates>
+                <parameter id="localClock.relativeRates"/>
+        </rates>
+        <rateIndicator>
+                <parameter id="localClock.changes"/>
+        </rateIndicator>
+        <clockRate>
+                <parameter id="clock.rate" value="1.0" lower="0.0"/>
+        </clockRate>
+</randomLocalClockModelCenancestor>
+
+<sumStatistic id="rateChanges" name="rateChangeCount" elementwise="true">
+        <parameter idref="localClock.changes"/>
+</sumStatistic>
+
+<rateStatisticCenancestor id="meanRate" name="meanRate" mode="mean" internal="true" external="true">
+        <treeModel idref="treeModel"/>
+        <randomLocalClockModelCenancestor idref="branchRates"/>
+</rateStatisticCenancestor>
+<rateStatisticCenancestor id="coefficientOfVariation" name="coefficientOfVariation" mode="coefficientOfVariation" internal="true" external="true">
+        <treeModel idref="treeModel"/>
+        <randomLocalClockModelCenancestor idref="branchRates"/>
+</rateStatisticCenancestor>
+<rateCovarianceStatistic id="covariance" name="covariance">
+        <treeModel idref="treeModel"/>
+        <randomLocalClockModelCenancestor idref="branchRates"/>
+</rateCovarianceStatistic>
+```
+
+####Binary LOH substitution matrix:
+TBI
+
+####CNV substitution matrix:
+It requires alignments with CNV states recoded as alphanumerical characters using the general data type indicated at the beginning of this README. It also requires a frequency model that indicates the state (or partial likelihood) of the estate of the cenancestor of the tree. This has been designed to include in the model the last common ancestor with a normal (wildtype) genome, for which the frequency model should be:
+
+```
+<frequencyModel id="frequencies">
+        <dataType idref="cnv"/>
+        <frequencies>
+                <parameter id="cnv.frequencies" value="0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+        </frequencies>
+</frequencyModel>
+```
+
+The CNV model itself must be specified after the frequencyModel.
+
+Example of the model:
+
+```
+<CNVModel id="cnv_subsmodel">
+        <frequencies>
+                <frequencyModel idref="frequencies"/>
+        </frequencies>
+        <gain_rate>
+                <parameter id="cnv.gain" value="1" lower="0"/>
+        </gain_rate>
+        <loss_rate>
+                <parameter id="cnv.loss" value="1" lower="0"/>
+        </loss_rate>
+        <conversion_rate>
+                <parameter id="cnv.conversion" value="1" lower="0"/>
+        </conversion_rate>
+</CNVModel>
+```
+
+The model depends on three parameters, namely: _Gain_, _Loss_ and _Conversion_ rate. However, only two parameters are free and the substitution matrix is normalized by the sum of the three rates. **We advice to fix one of the parameters and estimate the other two, which would be relative to the sum of the three**. The absolute rates will then be obtained dividing the estimated rate between the sum of the all of them (e.g., given estimated parameters _pLoss_, _pConversion_ and fixed _pGain_=1; _RelativeGainRate_= _pGain_/(_pLoss_+_pConversion_+_pGain_); _AbsoluteGainRate_=_RelativeGainRate_ * ClockRate).
+
+You need to add operators and priors for the rates you want to estimate.
+
+Example operators:
+
+```
+<scaleOperator scaleFactor="0.25" weight="0.25">
+	<parameter idref="cnv.loss"/>
+</scaleOperator>
+<scaleOperator scaleFactor="0.25" weight="0.25">
+	<parameter idref="cnv.conversion"/>
+</scaleOperator>
+```
+
+Example priors:
+
+```
+<exponentialPrior mean="1.0" offset="0.0">
+	<parameter idref="cnv.loss"/>
+</exponentialPrior>
+<exponentialPrior mean="1.0" offset="0.0">
+	<parameter idref="cnv.conversion"/>
+</exponentialPrior>
+```
+
+
+###Cenancestor Tree Likelihood
+
+The cenancestor tree likelihood implements a likelihood calculation that takes into account the extra branch from the most recent common ancestor to the last common ancestor with normal genome. Moreover, it includes two parameters to determine the cenancestor height and the branch length of the extra branch. The model must operate on the second, and the prior can be set in either of those (although the height is usually easier). **Important**: This tree likelihood model can only use cenancestor-aware clock rate models (i.e., clock rates models implemented in PISCA).
+
+Example model:
+
+```
+<cenancestorTreeLikelihood id="treeLikelihood" useAmbiguities="false">
+        <patterns idref="patterns"/>
+        <treeModel idref="treeModel"/>
+        <siteModel idref="siteModel"/>
+        <cenancestorHeight>
+                <parameter id="luca_height" value="5.0" lower="5.0" upper="60.0"/> <!-- Without the value it does not add the bounds -->
+        </cenancestorHeight>
+        <cenancestorBranch>
+                <parameter id="luca_branch" value="1" upper="55.0" lower="0.0"/>
+                <!-- Value 1 as a safe starting value -->
+        </cenancestorBranch>
+        <strictClockCenancestorBranchRates idref="branchRates"/>
+</cenancestorTreeLikelihood>
+```
+
+Example operators:
+
+```
+<scaleOperator scaleFactor="0.2" weight="1.0"> <!-- We operate the branch since it is relative to the root. Operating luca_height is error prone, since it depends on the root -->
+	<parameter idref="luca_branch"/>
+</scaleOperator>
+```
+
+Example priors:
+
+```
+<uniformPrior lower="5.0" upper="60.0">
+	<parameter idref="luca_height"/>
+</uniformPrior>
+```
+##Examples
+In the examples folder you can find two examle xml files, one with an strict molecular clock and another one with a random local clock.
