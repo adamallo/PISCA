@@ -27,13 +27,13 @@ package PISCA;
 
 import dr.evolution.tree.NodeRef;
 import dr.evolution.tree.Tree;
+import dr.evolution.tree.TreeTrait;
 import dr.evomodel.tree.TreeModel;
 import dr.evomodel.tree.TreeParameterModel;
 import dr.evomodel.tree.randomlocalmodel.RandomLocalTreeVariable;
 import dr.evomodelxml.branchratemodel.RandomLocalClockModelParser;
 import dr.inference.model.Model;
 import dr.inference.model.Parameter;
-import dr.inference.model.Statistic;
 import dr.inference.model.Variable;
 
 import java.util.logging.Logger;
@@ -61,8 +61,8 @@ public class RandomLocalClockModelCenancestor extends AbstractCenancestorBranchR
 
         this.ratesAreMultipliers = ratesAreMultipliers;
 
-        indicators = new TreeParameterModel(treeModel, rateIndicatorParameter, false);
-        rates = new TreeParameterModel(treeModel, ratesParameter, false);
+        indicators = new TreeParameterModel(treeModel, rateIndicatorParameter, false, Intent.BRANCH);
+        rates = new TreeParameterModel(treeModel, ratesParameter, false, Intent.BRANCH);
 
         rateIndicatorParameter.addBounds(new Parameter.DefaultBounds(1, 0, rateIndicatorParameter.getDimension()));
         ratesParameter.addBounds(new Parameter.DefaultBounds(Double.MAX_VALUE, 0, ratesParameter.getDimension()));
@@ -253,6 +253,21 @@ public class RandomLocalClockModelCenancestor extends AbstractCenancestorBranchR
 
     public Parameter getCenancestor() {
 		return this.cenancestorBranch;
+    }
+    
+    //Re-implementation of TreeTraitProvider
+    public TreeTrait getTreeTrait(final String key) {
+    	if (key.equals(RandomLocalClockModelParser.RATES)) {
+        	return this.rates;
+        } else if (key.equals(RandomLocalClockModelParser.RATE_INDICATORS)) {
+        	return this.indicators;
+        } else {
+            return this;
+        }
+    }
+ 
+    public TreeTrait[] getTreeTraits() {
+        return new TreeTrait[] { this, this.rates, this.indicators };
     }
 
     //Cenancestor-related variables

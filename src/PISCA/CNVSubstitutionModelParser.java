@@ -28,7 +28,6 @@
 package PISCA;
 
 import dr.evolution.datatype.DataType;
-import dr.evolution.datatype.GeneralDataType;
 import PISCA.CNVSubstitutionModel;
 import dr.evomodel.substmodel.FrequencyModel;
 import dr.inference.model.Variable;

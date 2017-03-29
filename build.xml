@@ -16,13 +16,12 @@
     <property name="build" location="build"/>
     <property name="lib" location="${beast.root}/build/dist"/>
     <property name="dist" location="dist"/>
+    <property name="release" location="release"/>
+    <property name="examples" location="examples"/>
+    <property name="version" value="0.9"/>
     
-    <!-- the following 2 properties will be changed for every plugin that you write -->
-      <!-- the plugin-class is the class that implements dr.app.plugin.Plugin -->
     <property name="plugin-class" value="PISCALoader"/>
-      <!-- the plugin-package is the package that contains your plugin-class -->
     <property name="plugin-package" value="PISCA"/>
-      <!-- plugin-jar name should list the fully qualified name to your plugin class -->
     <property name="plugin-jar" value="PISCA.PISCALoader.jar"/>
 
     <property environment="env"/>
@@ -72,18 +71,45 @@
             </fileset>
         </jar>
     </target>
-    
-    <target name="install"
+
+    <target name="release"
+            depends="dist"
+            description="creates a package to distribute the plugin">
+        <mkdir dir="${release}"/>
+        <copy todir="${release}/src">
+            <fileset dir="${src}"/>
+        </copy>
+	<copy todir="${release}/dist">
+	    <fileset dir="${dist}"/>
+        </copy>
+        <copy todir="${release}/examples">
+	    <fileset dir="${examples}"/>
+	</copy>
+	<copy file="README.md" todir="${release}"/>    
+	<copy file="LICENSE" todir="${release}"/>
+	<copy file="beast_sdk.properties.in" todir="${release}"/>
+	<copy file="build.xml" todir="${release}"/>
+	<copy file="install.sh" todir="${release}"/>
+	<tar destfile="${plugin-package}v${version}.tgz" compression="gzip">
+	    <tarfileset dir="${release}" prefix="${plugin-package}v${version}"/>
+	</tar>
+	<delete dir="${release}" verbose="false"/>
+    </target>
+
+    <target name="install-developer"
             depends="dist" 
             description="Install the plugin into BEAST's plugins directory">
         <mkdir dir="${beast.root}/plugins" />
         <copy file="${dist}/${plugin-jar}" todir="${beast.root}/plugins" />
     </target>
 
-    <target name="uninstall"
+    <target name="uninstall-developer"
             description="Remove the plugin from BEAST's plugins directory">
         <delete file="${beast.root}/plugins/${plugin-jar}" verbose="true"/>
     </target>
+
+<!-- install and uninstall of the normal version still pending to implement. Just execute the install.sh script?
+-->
 
     <target name="clean"
             description="Removes build products, but does not uninstall">
@@ -91,11 +117,11 @@
         <delete dir="${dist}" verbose="true"/>
     </target>
 
+<!-- Pending to implement.
     <target name="test-install"
             depends="install"
             description="Runs integration tests of the plugin">
         <mkdir dir="scratch" />
-        <!-- run the example xml file -->
         <java jar="${lib}/beast.jar"
            fork="true"
            failonerror="false"
@@ -114,4 +140,6 @@
      </condition>
    </fail>
     </target>
+-->
+
 </project>

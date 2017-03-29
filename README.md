@@ -131,6 +131,27 @@ Example:
         <randomLocalClockModelCenancestor idref="branchRates"/>
 </rateCovarianceStatistic>
 ```
+Also, you can get the relative rates, the indicator variables and the rate logged in the trees as traits.
+
+Example:
+
+```
+<logTree id="treeFileLog" logEvery="2000" nexusFormat="true" fileName="rlc_tests.trees" sortTranslationTable="true">
+                <treeModel idref="treeModel"/>
+                <trait name="rate" tag="rate">
+                        <randomLocalClockModelCenancestor idref="branchRates"/>
+                </trait>
+                <trait name="rates" tag="relRates">
+                        <randomLocalClockModelCenancestor idref="branchRates"/>
+                </trait>
+                <trait name="rateIndicator" tag="indicator">
+                        <randomLocalClockModelCenancestor idref="branchRates"/>
+                </trait>
+                <posterior idref="posterior"/>
+<!--            <rateStatisticCenancestor idref="meanRate"/>-->
+        </logTree>
+
+```
 
 ####Binary LOH substitution matrix:
 TBI

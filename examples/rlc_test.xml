@@ -299,7 +299,7 @@
 </operators>
 
 <!-- Define MCMC                                                             -->
-<mcmc id="mcmc" chainLength="20000000" autoOptimize="true" operatorAnalysis="rlc_tests.ops">
+<mcmc id="mcmc" chainLength="200000" autoOptimize="true" operatorAnalysis="rlc_tests.ops">
 	<posterior id="posterior">
 		<prior id="prior">
                         <coalescentLikelihood idref="coalescent"/>
@@ -346,7 +346,7 @@
 	<operators idref="operators"/>
 
 	<!-- write log to screen                                                     -->
-	<log id="screenLog" logEvery="2000">
+	<log id="screenLog" logEvery="200">
 		<column label="Posterior" dp="4" width="12">
 			<posterior idref="posterior"/>
 		</column>
@@ -383,7 +383,7 @@
 	</log>
 
 	<!-- write log to file                                                       -->
-	<log id="fileLog" logEvery="2000" fileName="rlc_tests.log" overwrite="false">
+	<log id="fileLog" logEvery="200" fileName="rlc_tests.log" overwrite="false">
 		<posterior idref="posterior"/>
 		<prior idref="prior"/>
 		<likelihood idref="likelihood"/>
@@ -404,13 +404,19 @@
 	</log>
 
 	<!-- write tree log to file                                                  -->
-	<logTree id="treeFileLog" logEvery="2000" nexusFormat="true" fileName="rlc_tests.trees" sortTranslationTable="true">
-		<treeModel idref="treeModel"/>
-		<trait name="rate" tag="rate">
-			<randomLocalClockModelCenancestor idref="branchRates"/>
-		</trait>
-		
-		<posterior idref="posterior"/>
+	<logTree id="treeFileLog" logEvery="200" nexusFormat="true" fileName="rlc_tests.trees" sortTranslationTable="true">
+	                <treeModel idref="treeModel"/>
+	                <trait name="rate" tag="rate">
+	                        <randomLocalClockModelCenancestor idref="branchRates"/>
+	                </trait>
+	                <trait name="rates" tag="relRates">
+	                        <randomLocalClockModelCenancestor idref="branchRates"/>
+	                </trait>
+	                <trait name="rateIndicator" tag="indicator">
+	                        <randomLocalClockModelCenancestor idref="branchRates"/>
+	                </trait>
+	                <posterior idref="posterior"/>
+	<!--            <rateStatisticCenancestor idref="meanRate"/>-->
 	</logTree>
 </mcmc>
 <report>

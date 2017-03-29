@@ -263,7 +263,7 @@
 </operators>
 
 <!-- Define MCMC                                                             -->
-<mcmc id="mcmc" chainLength="20000000" autoOptimize="true" operatorAnalysis="strict_test.xml.ops">
+<mcmc id="mcmc" chainLength="200000" autoOptimize="true" operatorAnalysis="strict_test.xml.ops">
 	<posterior id="posterior">
 		<prior id="prior">
                         <coalescentLikelihood idref="coalescent"/>
@@ -293,7 +293,7 @@
 	<operators idref="operators"/>
 
 	<!-- write log to screen                                                     -->
-	<log id="screenLog" logEvery="2000">
+	<log id="screenLog" logEvery="200">
 		<column label="Posterior" dp="4" width="12">
 			<posterior idref="posterior"/>
 		</column>
@@ -327,7 +327,7 @@
 	</log>
 
 	<!-- write log to file                                                       -->
-	<log id="fileLog" logEvery="2000" fileName="strict_test.xml.log" overwrite="false">
+	<log id="fileLog" logEvery="200" fileName="strict_test.xml.log" overwrite="false">
 		<posterior idref="posterior"/>
 		<prior idref="prior"/>
 		<likelihood idref="likelihood"/>
@@ -342,7 +342,7 @@
 	</log>
 
 	<!-- write tree log to file                                                  -->
-	<logTree id="treeFileLog" logEvery="2000" nexusFormat="true" fileName="strict_test.xml.trees" sortTranslationTable="true">
+	<logTree id="treeFileLog" logEvery="200" nexusFormat="true" fileName="strict_test.xml.trees" sortTranslationTable="true">
 		<treeModel idref="treeModel"/>
 		<trait name="rate" tag="rate">
 			<strictClockCenancestorBranchRates idref="branchRates"/>

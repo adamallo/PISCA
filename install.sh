@@ -9,7 +9,7 @@ permission_error="\nYou do not have writting permission in the BEAST directory. 
 successfull_script="\nPISCA has been successfully copied in the plugin directory\n"
 error_script="\nError copying PISCA to the plugin directory\n"
 edited_error="\nYour BEAST program had already been modified for the execution of plugins. This script is not modifying it and the installation of PISCA may, or may have not been successful\n"
-noplist="\nNo Info.plist detected. If your BEAST program contains a graphical interface version, it will not have access to the pluging\n"
+noplist="\nNo Info.plist detected. If your BEAST program contains a graphical interface version, it will not have access to the plugin\n"
 noStub="\nInfo.plist detected, but Stub not found. This is a problem of this script. Contact the author\n"
 done="\nPISCA has been successfully installed. Please, read the README.md file before starting using it. Remember that so far we do not provide Beauti capabilities\n"
 
