@@ -1,7 +1,7 @@
 # PISCA
 Phylogenetic Inference using Somatic Chromosomal Alterations. Plugin for BEAST 1.8.x.
 
-##Citation
+## Citation
 If you use this software, please cite:
 
 * Martinez P, Mallo D, Paulson TG, Li X, Sanchez CA, Reid BJ, Graham TA, Kuhner MK and Maley CC (_in prep_) Evolution of Barrett's Esophagus through space and time at single-crypt and whole-biopsy levels.
@@ -17,7 +17,7 @@ If you use the ascertainment bias correction, please cite:
 
 * Alekseyenko AV, Lee C, Suchard MA (2008) Wagner and Dollo: a stochastic duet by composing two parsiminious solos. Systematic Biology. 57, 772-784
 
-##Installation
+## Installation
 In order to install the compiled version of PISCA, execute the install.sh included in the package, indicating the root directory of your BEAST 1.8.X installation as the only argument. 
 Example:
 
@@ -25,17 +25,17 @@ Example:
 ./install.sh ~/bin/beast1.8.3/
 ```
 
-##Usage
+## Usage
 **WARNING:** So far PISCA is only compatible with the java version of BEAST, and therefore it is necessary to include the argument *--beagle_off* (or deselect BEAGLE in the GUI).
 
 PISCA does not include a modified version of Beauti. Therefore, you will have to put together the input xml manually (not recommended) use an script or manually modify one made using Beauti. The script [generate_genotypes.pl](https://github.com/adamallo/scripts_singlecrypt/blob/master/generate_genotypes.pl) could be a good starting point.
 
 Below you can find the models implemented by PISCA and XML examples of their implementation.
 
-##Included models
+## Included models
 The models are presented in the order they should appear in the xml file. The different clock models are different alternatives (only one can be used at a time) and are ordered by complexity.
 
-####General data type for the CNV substitution model
+#### General data type for the CNV substitution model
 The CNV substitution model requires the usage of a specific generalDatatype. This has to be **specified before the alignments** and look like:
 
 ```
@@ -73,7 +73,7 @@ The CNV substitution model requires the usage of a specific generalDatatype. Thi
 </generalDataType>
 ```
 
-####Ascertainment correction bias:
+#### Ascertainment correction bias:
 Corrects for the absence of a specific invariable state (in principle the wild-type) in the sequences. **Important: There cannot be invariable positions with the sate that is being corrected for in the alignment.** If some are present in the data (but most are lost and therefore they need to be corrected for) they must be trimmed from the alignment.
 
 The block structure is almost equivalent to the usual CharacterPatterns, with the addition of the parameter _state_ that indicates the missing invariable state that has to be corrected for (H is wildtype in the generalDataType used by our CNV substitution matrix).
@@ -84,7 +84,7 @@ The block structure is almost equivalent to the usual CharacterPatterns, with th
         <state code='H'/>
 </ascertainedCharacterPatterns>
 ```
-####Strict molecular clock:
+#### Strict molecular clock:
 The strict molecular clock has the same format and parameters as the original strict clock, with a name change (strictClockCenancestorBranchRates). If it is going to be estimated, an appropriate prior and operators must be included. Below you can see an example of a fixed rate of 1 (not estimated). 
 
 ```
@@ -95,7 +95,7 @@ The strict molecular clock has the same format and parameters as the original st
 </strictClockCenancestorBranchRates>
 ```
 
-####Random local clock:
+#### Random local clock:
 The random local clock and associated statistics have been adapted to the cenancestor-tree likelihood. However, their only change is their name (from randomLocalClockModel to randomLocalClockModelCenancestor), since their parameters, priors and operators are the same.
 
 Example:
@@ -153,10 +153,10 @@ Example:
 
 ```
 
-####Binary LOH substitution matrix:
+#### Binary LOH substitution matrix:
 TBI
 
-####CNV substitution matrix:
+#### CNV substitution matrix:
 It requires alignments with CNV states recoded as alphanumerical characters using the general data type indicated at the beginning of this README. It also requires a frequency model that indicates the state (or partial likelihood) of the estate of the cenancestor of the tree. This has been designed to include in the model the last common ancestor with a normal (wildtype) genome, for which the frequency model should be:
 
 ```
@@ -216,7 +216,7 @@ Example priors:
 ```
 
 
-###Cenancestor Tree Likelihood
+### Cenancestor Tree Likelihood
 
 The cenancestor tree likelihood implements a likelihood calculation that takes into account the extra branch from the most recent common ancestor to the last common ancestor with normal genome. Moreover, it includes two parameters to determine the cenancestor height and the branch length of the extra branch. The model must operate on the second, and the prior can be set in either of those (although the height is usually easier). **Important**: This tree likelihood model can only use cenancestor-aware clock rate models (i.e., clock rates models implemented in PISCA).
 
@@ -253,5 +253,7 @@ Example priors:
 	<parameter idref="luca_height"/>
 </uniformPrior>
 ```
-##Examples
+
+## Examples
+
 In the examples folder you can find two examle xml files, one with an strict molecular clock and another one with a random local clock.
