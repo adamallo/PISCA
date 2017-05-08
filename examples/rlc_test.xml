@@ -241,7 +241,7 @@
 		<parameter id="luca_branch" value="1" upper="55.0" lower="0.0"/>
 		<!-- Value 1 as a safe starting value -->
 	</cenancestorBranch>
-	<strictClockCenancestorBranchRates idref="branchRates"/>
+	<randomLocalClockModelCenancestor idref="branchRates"/>
 </cenancestorTreeLikelihood>
 
 <operators id="operators" optimizationSchedule="default">
