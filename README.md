@@ -4,25 +4,34 @@ Phylogenetic Inference using Somatic Chromosomal Alterations. Plugin for BEAST 1
 ## Citation
 If you use this software, please cite:
 
-* Martinez P, Mallo D, Paulson TG, Li X, Sanchez CA, Reid BJ, Graham TA, Kuhner MK and Maley CC (_in prep_) Evolution of Barrett's Esophagus through space and time at single-crypt and whole-biopsy levels.
-* Kostadinov RL, Kuhner MK, Li X, et al. 2013. NSAIDs Modulate Clonal Evolution in Barrett’s Esophagus. PLoS Genet. 9.
-* Drummond AJ, Suchard MA, Xie D & Rambaut A (2012) Bayesian phylogenetics with BEAUti and the BEAST 1.7 Molecular Biology And Evolution 29: 1969-1973
+* [Martinez P, Mallo D, Paulson TG, Li X, Sanchez CA, Reid BJ, Graham TA, Kuhner MK and Maley CC (2018) Evolution of Barrett's Esophagus through space and time at single-crypt and whole-biopsy levels. Nat. Commun 9: 794.](https://www.nature.com/articles/s41467-017-02621-x)
+* [Kostadinov RL, Kuhner MK, Li X, et al. 2013. NSAIDs Modulate Clonal Evolution in Barrett’s Esophagus. PLoS Genet. 9.](http://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1003553)
+* [Drummond AJ, Suchard MA, Xie D & Rambaut A (2012) Bayesian phylogenetics with BEAUti and the BEAST 1.7 Molecular Biology And Evolution 29: 1969-1973](https://www.ncbi.nlm.nih.gov/pubmed/22367748)
 
 
 If you use the random local model, please cite:
 
-* Drummond AJ & Suchard MA (2010) Bayesian random local clocks, or one rate to rule them all. BMC Biology 8, 114
+* [Drummond AJ & Suchard MA (2010) Bayesian random local clocks, or one rate to rule them all. BMC Biology 8, 114](https://bmcbiol.biomedcentral.com/articles/10.1186/1741-7007-8-114)
 
 If you use the ascertainment bias correction, please cite:
 
-* Alekseyenko AV, Lee C, Suchard MA (2008) Wagner and Dollo: a stochastic duet by composing two parsiminious solos. Systematic Biology. 57, 772-784
+* [Alekseyenko AV, Lee C, Suchard MA (2008) Wagner and Dollo: a stochastic duet by composing two parsiminious solos. Systematic Biology. 57, 772-784](https://www.ncbi.nlm.nih.gov/pubmed/18853363)
 
 ## Installation
+### Compiled version
 In order to install the compiled version of PISCA, execute the install.sh included in the package, indicating the root directory of your BEAST 1.8.X installation as the only argument. 
 Example:
 
 ```
 ./install.sh ~/bin/beast1.8.3/
+```
+### Sources
+In order to install PISCA from its sources, execute ant test-install. This requires to have functional copies of Java JDK and Ant and having specified the root directory of your BEAST 1.8.X installation in the file beast_sdk.properties.
+Example:
+
+```
+echo "beast.root=/Users/your/path/to/beast-mcmc/here" > beast_sdk.properties
+ant test-install
 ```
 
 ## Usage

@@ -1,12 +1,19 @@
 #!/bin/bash
 
-welcome="\nPISCA v0.9 Installer\n"
+welcome="\nPISCA v1.0 Installer\n"
 plugin_name="PISCA.PISCALoader.jar"
-usage="\nUsage: $0 beast_directory\nPlease, indicate the root directory of the BEAST 1.8.X software in which PISCA will be installed\n"
+usage="\nUsage: $0 [beast_directory]\nPlease, indicate the root directory of the BEAST 1.8.X software in which PISCA will be installed as the only command line argument option or indicate it in the file beast_sdk.properties as \"beast.root=/directory/of/BEASTv1.8.X\"\n"
 source_error="This script has been intended to install the compiled version of PISCA, while it seems that you have downloaded the source code. Please, find the last release of PISCA at https://github.com/adamallo/PISCA/releases/latest\n"
-wrong_folder_error="\nThe directory $1 does not look like the root directory of a BEAST 1.8.X instalation"
+
+wrong_folder_error() {
+    echo -e "\nThe directory $1 does not look like the root directory of a BEAST 1.8.X instalation"
+}
+argument_priority="\nBEAST directory indicated in both beast_sdk.properties and command line argument. Using the latter\n"
+beast_sdk_error="\nThe beast_sdk.properties file does not contain a valid beast.root variable"
 permission_error="\nYou do not have writting permission in the BEAST directory. Please, execute this script with sudo or change the write permissions of $1 and subdirectories\n"
-successfull_script="\nPISCA has been successfully copied in the plugin directory\n"
+successfull_script() {
+    echo -e "\nPISCA has been successfully copied in the plugin directory: $1\n"
+}
 error_script="\nError copying PISCA to the plugin directory\n"
 edited_error="\nYour BEAST program had already been modified for the execution of plugins. This script is not modifying it and the installation of PISCA may, or may have not been successful\n"
 noplist="\nNo Info.plist detected. If your BEAST program contains a graphical interface version, it will not have access to the plugin\n"
@@ -21,32 +28,58 @@ then
 	exit 1
 fi
 
-if [[ $# -ne 1 ]] || [[ $1 == "-h" ]] || [[ $1 == "--help" ]]
+if [[ -f beast_sdk.properties ]] ##Detection of the BEAST directory in the beast_sdk.properties file
+then
+    folder=$(cat beast_sdk.properties | sed -n "/^beast.root=/p" | sed "s/^beast.root=//g"| head -n 1)
+    if [[ ! -f $folder/bin/beast ]] || [[ ! -d $folder/lib ]]
+    then
+        folder=""
+    fi
+
+fi
+
+
+if [[ $# -gt 1 ]] || [[ $1 == "-h" ]] || [[ $1 == "--help" ]] || ([[ $folder == "" ]] && [[ $# -eq 0 ]]) ##Argument problems
 then
 	echo -e $usage
+    echo $folder
 	exit 1
+fi
 
-elif [[ ! -d $1 ]] || [[ ! -f $1/bin/beast ]] || [ ! -d $1/lib ]
+if [[ $# -ne 1 ]] || [[ ! -d $1 ]] || [[ ! -f $1/bin/beast ]] || [ ! -d $1/lib ] ##If problems with argument
 then
-	echo -e $wrong_folder_error 
-	echo -e $usage
-	exit 1
+    if [[ $folder == "" ]]
+    then
+        echo -e $beast_sdk_error
+        echo -e $wrong_folder_error $1
+	    echo -e $usage
+	    exit 1
+    fi
 
-elif [[ ! -w $1/lib ]] || [[ ! -w $1/bin ]]
+    echo -e $folder_properties
+else
+    if [[ $folder != "" ]]
+    then
+        echo -e $argument_priority
+    fi
+    folder=$1
+fi
+
+if [[ ! -w $folder/lib ]] || [[ ! -w $folder/bin ]]
 then
 	echo -e $permission_error
 	echo -e $usage
 	exit 1
 fi
 
-beast_root=$1
+beast_root=$folder
 
 mkdir $beast_root/lib/plugins
 cp dist/$plugin_name $beast_root/lib/plugins
 
 if [[ -f $beast_root/lib/plugins/$plugin_name ]]
 then
-	echo -e $successfull_script
+	successfull_script $beast_root
 else
 	echo -e $error_script
 	exit 1

@@ -18,7 +18,7 @@
     <property name="dist" location="dist"/>
     <property name="release" location="release"/>
     <property name="examples" location="examples"/>
-    <property name="version" value="0.9"/>
+    <property name="version" value="1.0"/>
     
     <property name="plugin-class" value="PISCALoader"/>
     <property name="plugin-package" value="PISCA"/>
@@ -34,7 +34,7 @@
     </target>
 
     <target name="all"
-            depends="compile-all"
+            depends="dist"
             description="Build all run-time stuff">
     </target>
 
@@ -108,38 +108,50 @@
         <delete file="${beast.root}/plugins/${plugin-jar}" verbose="true"/>
     </target>
 
-<!-- install and uninstall of the normal version still pending to implement. Just execute the install.sh script?
--->
-
     <target name="clean"
             description="Removes build products, but does not uninstall">
         <delete dir="${build}" verbose="true"/>
         <delete dir="${dist}" verbose="true"/>
     </target>
+    
+    <target name="install"
+            depends="dist"
+            description="Install PISCA using the script install.sh in beast.root, specified in beast_sdk.properties">
+            <exec executable="./install.sh"> 
+                <arg value="${beast.root}"/>
+            </exec>
+    </target>
 
-<!-- Pending to implement.
-    <target name="test-install"
-            depends="install"
+    <target name="uninstall"
+            description="Removes the jar file and restores the backup of the beast bin generated in the installation step">
+            <delete file="${beast.root}/plugins/${plugin-jar}"/>
+            <move file="${beast.root}/bin/beast_bkp" tofile="${beast.root}/bin/beast"/>
+    </target>
+
+    <target name="test"
             description="Runs integration tests of the plugin">
         <mkdir dir="scratch" />
-        <java jar="${lib}/beast.jar"
-           fork="true"
+        <exec executable="${beast.root}/bin/beast"
            failonerror="false"
            resultproperty="example.exitcode"
            dir="scratch"
            >
-         <sysproperty key="beast.plugins.dir" value="${beast.root}/plugins" />
-         <arg value="${basedir}/example/testtestPlugin.xml"/>
-         <classpath>
-           <pathelement location="${lib}/beast.jar"/>
-         </classpath>
-       </java>
-    <fail message="The example example/testtestPlugin.xml failed">
-     <condition>
-         <not> <equals arg1="${example.exitcode}" arg2="0"/></not>
-     </condition>
-   </fail>
+            <arg value="-beagle_off"/>
+            <arg value="-seed"/>
+            <arg value="20"/>
+            <arg value="${basedir}/examples/validation.xml"/>
+        </exec>
+        <fail message="The example examples/validation.xml failed">
+            <condition>
+                <not> <equals arg1="${example.exitcode}" arg2="0"/></not>
+            </condition>
+        </fail>
+        <delete dir="scratch"/>
     </target>
--->
+
+    <target name="test-install"
+            depends="install,test" 
+            description="Installs PISCA and runs integration tests of the plugin">
+    </target>
 
 </project>
