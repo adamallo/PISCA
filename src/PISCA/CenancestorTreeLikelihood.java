@@ -88,7 +88,10 @@ public class CenancestorTreeLikelihood extends AbstractTreeLikelihood {
         }
 
         try {
-            this.siteModel = siteModel;
+            
+			final Logger logger = Logger.getLogger("dr.evomodel");
+            
+			this.siteModel = siteModel;
             addModel(siteModel);
 
             this.frequencyModel = siteModel.getFrequencyModel();
@@ -101,18 +104,36 @@ public class CenancestorTreeLikelihood extends AbstractTreeLikelihood {
             this.categoryCount = siteModel.getCategoryCount();
             
             this.cenancestorHeight = cenancestorHeight;
-            	addVariable(cenancestorHeight);
-            	cenancestorHeight.addBounds(new Parameter.DefaultBounds(Double.POSITIVE_INFINITY, 0.0, 1)); 
-            	
-            	this.cenancestorBranch= cenancestorBranch;
-            	cenancestorBranch.addBounds(new Parameter.DefaultBounds(Double.POSITIVE_INFINITY, 0.0,1));
-            	addVariable(cenancestorBranch);
-            	branchRateModel.initCenancestor(cenancestorBranch);
-            	
-            	//if (asStatistic == cenancestorHeight){
-            	//	this.branchRules=true;
-            	//}
-            	
+            addVariable(cenancestorHeight);
+            cenancestorHeight.addBounds(new Parameter.DefaultBounds(Double.POSITIVE_INFINITY, 0.0, 1)); 
+            
+            this.cenancestorBranch= cenancestorBranch;
+            cenancestorBranch.addBounds(new Parameter.DefaultBounds(Double.POSITIVE_INFINITY, 0.0,1));
+            addVariable(cenancestorBranch);
+            
+			//Double-checking that the initial value of cenancestor-branch and otherwise making it appropriate (throwing a warning)
+			double rootDepth=treeModel.getRootHeightParameter().getParameterValue(0);
+			double initialCenancestorHeight=rootDepth+cenancestorBranch.getValue(0);
+			double newCenancestorBranch=-1;
+			
+			if(initialCenancestorHeight<cenancestorHeight.getBounds().getLowerLimit(0)){
+				newCenancestorBranch=cenancestorHeight.getBounds().getLowerLimit(0)-rootDepth;
+			}
+			if(initialCenancestorHeight>cenancestorHeight.getBounds().getUpperLimit(0) ){
+				newCenancestorBranch=cenancestorHeight.getBounds().getUpperLimit(0)-rootDepth;
+			}
+			
+			if(newCenancestorBranch!=-1){
+				logger.info("The initial parameter value for the cenancestor branch length, "+cenancestorBranch.getValue(0)+" was not valid. Recalculated to: "+newCenancestorBranch);
+				cenancestorBranch.setParameterValue(0, newCenancestorBranch);
+			}
+
+			branchRateModel.initCenancestor(cenancestorBranch);
+            
+            //if (asStatistic == cenancestorHeight){
+            //	this.branchRules=true;
+            //}
+            
             //	if (branchRules==true){
             		updateCenancestorHeight(); //Trying to avoid improper initial values
             //	}
@@ -120,11 +141,10 @@ public class CenancestorTreeLikelihood extends AbstractTreeLikelihood {
             //		updateCenancestorBranch();
             //	}
         
-            final Logger logger = Logger.getLogger("dr.evomodel");
             String coreName = "Java general";
             
             /**
-             * TODO: Check if is worthy to implement other datatypes.
+             * TODO: Check if it is worth implementing other datatypes.
              */
             
             final DataType dataType = patternList.getDataType();

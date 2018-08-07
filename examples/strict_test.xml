@@ -204,7 +204,7 @@
 	<treeModel idref="treeModel"/>
 	<siteModel idref="siteModel"/>
 	<cenancestorHeight>
-		<parameter id="luca_height" lower="5.0" upper="60.0"/>
+		<parameter id="luca_height" value="0" upper="60.0" lower="5.0" />
 	</cenancestorHeight>
 	<cenancestorBranch>
 		<parameter id="luca_branch" value="1" upper="55.0" lower="0.0"/>
