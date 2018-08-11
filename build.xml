@@ -17,8 +17,9 @@
     <property name="lib" location="${beast.root}/build/dist"/>
     <property name="dist" location="dist"/>
     <property name="release" location="release"/>
-    <property name="examples" location="examples"/>
-    <property name="version" value="1.0.1"/>
+	<property name="examples" location="examples"/>
+	<property name="patch" location="patch"/>
+    <property name="version" value="1.0.2"/>
     
     <property name="plugin-class" value="PISCALoader"/>
     <property name="plugin-package" value="PISCA"/>
@@ -79,21 +80,24 @@
         <copy todir="${release}/src">
             <fileset dir="${src}"/>
         </copy>
-	<copy todir="${release}/dist">
-	    <fileset dir="${dist}"/>
+		<copy todir="${release}/dist">
+	    	<fileset dir="${dist}"/>
         </copy>
-        <copy todir="${release}/examples">
-	    <fileset dir="${examples}"/>
-	</copy>
-	<copy file="README.md" todir="${release}"/>    
-	<copy file="LICENSE" todir="${release}"/>
-	<copy file="beast_sdk.properties.in" todir="${release}"/>
-	<copy file="build.xml" todir="${release}"/>
-	<copy file="install.sh" todir="${release}"/>
-	<tar destfile="${plugin-package}v${version}.tgz" compression="gzip">
-	    <tarfileset dir="${release}" prefix="${plugin-package}v${version}"/>
-	</tar>
-	<delete dir="${release}" verbose="false"/>
+		<copy todir="${release}/examples">
+	    	<fileset dir="${examples}"/>
+		</copy>
+		<copy todir="${release}/patch">
+			<fileset dir="${patch}"/>
+		</copy>
+		<copy file="README.md" todir="${release}"/>    
+		<copy file="LICENSE" todir="${release}"/>
+		<copy file="beast_sdk.properties.in" todir="${release}"/>
+		<copy file="build.xml" todir="${release}"/>
+		<copy file="install.sh" todir="${release}"/>
+		<tar destfile="${plugin-package}v${version}.tgz" compression="gzip">
+	    	<tarfileset dir="${release}" prefix="${plugin-package}v${version}"/>
+		</tar>
+		<delete dir="${release}" verbose="false"/>
     </target>
 
     <target name="install-developer"

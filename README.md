@@ -17,6 +17,19 @@ If you use the ascertainment bias correction, please cite:
 
 * [Alekseyenko AV, Lee C, Suchard MA (2008) Wagner and Dollo: a stochastic duet by composing two parsiminious solos. Systematic Biology. 57, 772-784](https://www.ncbi.nlm.nih.gov/pubmed/18853363)
 
+## Known problems and limitations
+**WARNING:** So far PISCA is only compatible with the java version of BEAST, and therefore it is necessary to include the argument *-beagle_off* (or deselect BEAGLE in the GUI). This makes the current version of PISCA incompatible with BEAST v1.10.X.
+
+**WARNING:** PISCA is compatible with the Metropolis-coupled MCMC algorithm implemented in BEAST. However, there is a bug in BEAST v1.8.X that prevents plugins from using the MC3 algorithm. In order to circumvent this problem, you can download and compile [my modified version of BEAST v1.8.3 that incorporates PISCA](https://github.com/adamallo/beast-mcmc) or patch your BEAST v1.8.4 beast.jar (located in BEAST_ROOT/lib) with the class BeastMain.class distributed with PISCA (patch/BeastMain.class). In order to do so, you need to run something similar to this:
+
+```
+cd $BEAST_ROOT/lib
+mkdir -p dr/app/beast
+cp ~/Downloads/PISCAv1.0.X/patch/BeastMain.class dr/app/beast/
+jar uf beast.jar dr/app/beast/BeastMain.class
+rm -rf dr
+```
+
 ## Installation
 ### Compiled version
 In order to install the compiled version of PISCA, execute the install.sh included in the package, indicating the root directory of your BEAST 1.8.X installation as the only argument. 
@@ -35,7 +48,7 @@ ant test-install
 ```
 
 ## Usage
-**WARNING:** So far PISCA is only compatible with the java version of BEAST, and therefore it is necessary to include the argument *--beagle_off* (or deselect BEAGLE in the GUI).
+**WARNING:** So far PISCA is only compatible with the java version of BEAST, and therefore it is necessary to include the argument *-beagle_off* (or deselect BEAGLE in the GUI). This makes the current version of PISCA incompatible with BEAST v1.10.X.
 
 PISCA does not include a modified version of Beauti. Therefore, you will have to put together the input xml manually (not recommended) use an script or manually modify one made using Beauti. The script [generate_genotypes.pl](https://github.com/adamallo/scripts_singlecrypt/blob/master/generate_genotypes.pl) could be a good starting point.
 
