@@ -27,6 +27,7 @@ package PISCA;
 
 import dr.evomodel.tree.TreeModel;
 import dr.inference.model.Parameter;
+import dr.inference.model.Bounds;
 import dr.xml.*;
 
 import java.util.logging.Logger;
@@ -55,6 +56,12 @@ public class RandomLocalClockModelParserCenancestor extends AbstractXMLObjectPar
 
         if (xo.hasChildNamed(CLOCK_RATE)) {
             meanRateParameter = (Parameter) xo.getElementFirstChild(CLOCK_RATE);
+        }
+		
+		Bounds<Double> rateBounds=meanRateParameter.getBounds();
+
+        if (rateBounds==null|| rateBounds!=null && rateBounds.getLowerLimit(0)<0.00000001){
+            Logger.getLogger("dr.evomodel").info("\n\nWARNING: If used with ascertainment bias correction, a lower-unbounded clockrate may generate numerical instability resulting in positive data likelihoods and impeding proper mixing.");
         }
 
         boolean ratesAreMultipliers = xo.getAttribute(RATES_ARE_MULTIPLIERS, false);
