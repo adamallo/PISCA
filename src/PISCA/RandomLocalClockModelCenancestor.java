@@ -255,7 +255,7 @@ public class RandomLocalClockModelCenancestor extends AbstractCenancestorBranchR
 		return this.cenancestorBranch;
     }
     
-    //Re-implementation of TreeTraitProvider
+    @Override
     public TreeTrait getTreeTrait(final String key) {
     	if (key.equals(RandomLocalClockModelParser.RATES)) {
         	return this.rates;
@@ -266,6 +266,7 @@ public class RandomLocalClockModelCenancestor extends AbstractCenancestorBranchR
         }
     }
  
+	@Override
     public TreeTrait[] getTreeTraits() {
         return new TreeTrait[] { this, this.rates, this.indicators };
     }

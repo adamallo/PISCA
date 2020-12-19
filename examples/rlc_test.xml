@@ -189,10 +189,11 @@
 	<parameter idref="localClock.changes"/>
 </sumStatistic>
 
-<rateStatisticCenancestor id="meanRate" name="meanRate" mode="mean" internal="true" external="true">
+<rateStatisticCenancestor id="cenancestorRate" name="cenancestorRate" mode="cenancestor" internal="true" external="true">
 	<treeModel idref="treeModel"/>
 	<randomLocalClockModelCenancestor idref="branchRates"/>
 </rateStatisticCenancestor>
+
 <rateStatisticCenancestor id="coefficientOfVariation" name="coefficientOfVariation" mode="coefficientOfVariation" internal="true" external="true">
 	<treeModel idref="treeModel"/>
 	<randomLocalClockModelCenancestor idref="branchRates"/>
@@ -398,9 +399,9 @@
 		<parameter idref="clock.rate"/>
 		<coalescentLikelihood idref="coalescent"/>
 		<statistic idref="rateChanges"/>
-		<rateStatisticCenancestor idref="meanRate"/>
 		<rateStatisticCenancestor idref="coefficientOfVariation"/>
 		<rateCovarianceStatistic idref="covariance"/>
+		<rateStatisticCenancestor idref="cenancestorRate"/>
 	</log>
 
 	<!-- write tree log to file                                                  -->
@@ -415,7 +416,7 @@
 	                <trait name="rateIndicator" tag="indicator">
 	                        <randomLocalClockModelCenancestor idref="branchRates"/>
 	                </trait>
-	                <posterior idref="posterior"/>
+					<posterior idref="posterior"/>
 	<!--            <rateStatisticCenancestor idref="meanRate"/>-->
 	</logTree>
 </mcmc>

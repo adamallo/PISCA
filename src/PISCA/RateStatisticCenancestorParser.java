@@ -42,6 +42,7 @@ public class RateStatisticCenancestorParser extends AbstractXMLObjectParser {
     public static final String MEAN = "mean";
     public static final String VARIANCE = "variance";
     public static final String COEFFICIENT_OF_VARIATION = "coefficientOfVariation";
+    public static final String CENANCESTOR = "cenancestor";
 
     public String getParserName() {
         return RATE_STATISTIC;
@@ -86,7 +87,7 @@ public class RateStatisticCenancestorParser extends AbstractXMLObjectParser {
             new ElementRule(BranchRateModel.class),
             AttributeRule.newBooleanRule("internal"),
             AttributeRule.newBooleanRule("external"),
-            new StringAttributeRule("mode", "This attribute determines how the rates are summarized, can be one of (mean, variance, coefficientOfVariance)", new String[]{MEAN, VARIANCE, COEFFICIENT_OF_VARIATION}, false),
+            new StringAttributeRule("mode", "This attribute determines how the rates are summarized, can be one of (mean, variance, coefficientOfVariance)", new String[]{MEAN, VARIANCE, COEFFICIENT_OF_VARIATION,	CENANCESTOR}, false),
             new StringAttributeRule("name", "A name for this statistic primarily for the purposes of logging", true),
     };
 
