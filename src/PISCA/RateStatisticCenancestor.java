@@ -72,7 +72,7 @@ public class RateStatisticCenancestor extends Statistic.Abstract implements Tree
     		getCenancestor();
     	}
 
-		if(mode.equals(RateStatisticCenancestorParser.CENANCESTOR) {
+		if(mode.equals(RateStatisticCenancestorParser.CENANCESTOR)) {
 			return branchRateModel.getBranchRate(tree.getNodeHeight(tree.getRoot()), tree.getNodeHeight(tree.getRoot())+cenancestorBranch.getStatisticValue(0));	
 		} else {
 
