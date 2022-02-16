@@ -135,7 +135,7 @@ public class AscertainedCharactersSitePatternsParser extends AbstractXMLObjectPa
 	    private XMLSyntaxRule[] rules = new XMLSyntaxRule[]{
 	            new ElementRule(Alignment.class),
 	            new ElementRule(Identifiable.class, 0, Integer.MAX_VALUE),
-	            new ContentRule("<state code=\"X\"/>")
+	            new ContentRule("<state code=\"2\"/>")
 	    };
 
 	    public String getParserDescription() {

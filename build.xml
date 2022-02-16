@@ -19,7 +19,7 @@
     <property name="release" location="release"/>
 	<property name="examples" location="examples"/>
 	<property name="patch" location="patch"/>
-    <property name="version" value="1.0.3"/>
+    <property name="version" value="1.1"/>
     
     <property name="plugin-class" value="PISCALoader"/>
     <property name="plugin-package" value="PISCA"/>
@@ -51,7 +51,7 @@
     <target name="compile-basic"
             depends="init">
         <!-- Compile the java code from ${src} into ${build} -->
-        <javac source="1.6" srcdir="${src}" destdir="${build}"
+        <javac source="1.7" srcdir="${src}" destdir="${build}"
                classpath="${lib}/beast.jar">
                             <include name="${plugin-package}/*.java"/>
         </javac>
@@ -103,13 +103,13 @@
     <target name="install-developer"
             depends="dist" 
             description="Install the plugin into BEAST's plugins directory">
-        <mkdir dir="${beast.root}/plugins" />
-        <copy file="${dist}/${plugin-jar}" todir="${beast.root}/plugins" />
+		<mkdir dir="${beast.root}/lib/plugins" />
+		<copy file="${dist}/${plugin-jar}" todir="${beast.root}/lib/plugins" />
     </target>
 
     <target name="uninstall-developer"
             description="Remove the plugin from BEAST's plugins directory">
-        <delete file="${beast.root}/plugins/${plugin-jar}" verbose="true"/>
+		<delete file="${beast.root}/lib/plugins/${plugin-jar}" verbose="true"/>
     </target>
 
     <target name="clean"
@@ -121,15 +121,15 @@
     <target name="install"
             depends="dist"
             description="Install PISCA using the script install.sh in beast.root, specified in beast_sdk.properties">
-            <exec executable="./install.sh"> 
-                <arg value="${beast.root}"/>
-            </exec>
+        <exec executable="./install.sh"> 
+            <arg value="${beast.root}"/>
+        </exec>
     </target>
 
     <target name="uninstall"
             description="Removes the jar file and restores the backup of the beast bin generated in the installation step">
-            <delete file="${beast.root}/plugins/${plugin-jar}"/>
-            <move file="${beast.root}/bin/beast_bkp" tofile="${beast.root}/bin/beast"/>
+		<delete file="${beast.root}/lib/plugins/${plugin-jar}"/>
+        <move file="${beast.root}/bin/beast_bkp" tofile="${beast.root}/bin/beast"/>
     </target>
 
     <target name="test"

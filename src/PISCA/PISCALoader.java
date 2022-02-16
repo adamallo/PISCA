@@ -28,18 +28,20 @@ public class PISCALoader implements Plugin {
 		parsers.add(parser2);
 		CNVSubstitutionModelParser parser3 = new CNVSubstitutionModelParser();
 		parsers.add(parser3);
-		CenancestorTreeLikelihoodParser parser4 = new CenancestorTreeLikelihoodParser();
+		AbsoluteCNASubstitutionModelParser parser4 = new AbsoluteCNASubstitutionModelParser();
 		parsers.add(parser4);
-		LOHParser parser5 = new LOHParser();
+		CenancestorTreeLikelihoodParser parser5 = new CenancestorTreeLikelihoodParser();
 		parsers.add(parser5);
-		RandomLocalClockModelParserCenancestor parser6 = new RandomLocalClockModelParserCenancestor();
+		LOHParser parser6 = new LOHParser();
 		parsers.add(parser6);
-		RateEpochCenancestorBranchRateModelParser parser7 = new RateEpochCenancestorBranchRateModelParser();
+		RandomLocalClockModelParserCenancestor parser7 = new RandomLocalClockModelParserCenancestor();
 		parsers.add(parser7);
-		RateStatisticCenancestorParser parser8 = new RateStatisticCenancestorParser();
+		RateEpochCenancestorBranchRateModelParser parser8 = new RateEpochCenancestorBranchRateModelParser();
 		parsers.add(parser8);
-		StrictClockCenancestorBranchRatesParser parser9 = new StrictClockCenancestorBranchRatesParser();
+		RateStatisticCenancestorParser parser9 = new RateStatisticCenancestorParser();
 		parsers.add(parser9);
+		StrictClockCenancestorBranchRatesParser parser10 = new StrictClockCenancestorBranchRatesParser();
+		parsers.add(parser10);
                 return parsers;
         }
 
