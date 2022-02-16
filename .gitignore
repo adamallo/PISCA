@@ -3,7 +3,6 @@ beast-mcmc
 *.tgz
 beast_sdk.properties
 plugins
-PISCA
 
 build
 dist
