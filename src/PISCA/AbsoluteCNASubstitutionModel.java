@@ -125,7 +125,7 @@ public class AbsoluteCNASubstitutionModel extends AbstractModel implements Subst
     }
 
 	protected void handleModelChangedEvent(Model model, Object object, int index) { //Executed when a registered model changes
-    		if (model == freqModel) //Frequency independent model
+    		if (model == freqModel) //The only model that can be registered is the frequencyModel, which is not used by this substitution model
     			return;
     }
 
