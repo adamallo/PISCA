@@ -20,13 +20,16 @@ If you use the ascertainment bias correction, please cite:
 ## Known problems and limitations
 **WARNING:** So far PISCA is only compatible with the java version of BEAST, and therefore it is necessary to include the argument *-beagle_off* (or deselect BEAGLE in the GUI). This makes the current version of PISCA incompatible with BEAST v1.10.X.
 
-**WARNING:** PISCA is compatible with the Metropolis-coupled MCMC algorithm implemented in BEAST. However, there is a bug in BEAST v1.8.X that prevents plugins from using the MC3 algorithm. In order to circumvent this problem, you can download and compile [my modified version of BEAST v1.8.3 that incorporates PISCA](https://github.com/adamallo/beast-mcmc) or patch your BEAST v1.8.4 beast.jar (located in BEAST_ROOT/lib) with the class BeastMain.class distributed with PISCA (patch/BeastMain.class). In order to do so, you need to run something similar to this:
+**WARNING:** PISCA is compatible with the Metropolis-coupled MCMC algorithm implemented in BEAST. However, there is a bug in BEAST v1.8.X that prevents plugins from using the MC3 algorithm. In order to circumvent this problem, you can download and compile [my modified version of BEAST v1.8.3 that incorporates PISCA](https://github.com/adamallo/beast-mcmc-pisca) or patch your BEAST v1.8.4 beast.jar (located in BEAST_ROOT/lib) with the class BeastMain.class distributed with PISCA (patch/BeastMain.class). In order to do so, you need to run something similar to this:
 
 ```
 cd $BEAST_ROOT/lib
 mkdir -p dr/app/beast
-cp ~/Downloads/PISCAv1.0.X/patch/BeastMain.class dr/app/beast/
+mkdir -p dr/inference/mcmcmc
+cp ~/Downloads/PISCAv1.X.X/patch/BeastMain.class dr/app/beast/
+cp ~/Downloads/PISCAv1.X.X/patch/MCMCMCRunner.class dr/inference/mcmcmc
 jar uf beast.jar dr/app/beast/BeastMain.class
+jar uf beast.jar dr/inference/mcmcmc/MCMCMCRunner.class
 rm -rf dr
 ```
 
