@@ -42,6 +42,8 @@ public class PISCALoader implements Plugin {
 		parsers.add(parser9);
 		StrictClockCenancestorBranchRatesParser parser10 = new StrictClockCenancestorBranchRatesParser();
 		parsers.add(parser10);
+		BiallelicBinarySubstitutionModelParser parser11 = new BiallelicBinarySubstitutionModelParser();
+		parsers.add(parser11);
                 return parsers;
         }
 
