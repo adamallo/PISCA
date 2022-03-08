@@ -30,6 +30,7 @@ package PISCA;
 import dr.evolution.datatype.DataType;
 import PISCA.BiallelicBinarySubstitutionModel;
 import dr.evomodel.substmodel.FrequencyModel;
+import dr.inference.model.Parameter;
 import dr.inference.model.Variable;
 import dr.xml.*;
 
@@ -43,7 +44,8 @@ import java.util.logging.Logger;
 public class BiallelicBinarySubstitutionModelParser extends AbstractXMLObjectParser {
 
 	public static final String BiallelicBinary_MODEL = "BiallelicBinaryModel";
-    public static final String DEMETHYLATION_RATE= "relative_demethylation_rate";
+    public static final String DEMETHYLATION_RATE= "demethylation_rate";
+    public static final String METHYLATION_RATE= "methylation_rate";
     public static final String FREQUENCIES = "frequencies";
 
     public String getParserName() {
@@ -52,16 +54,28 @@ public class BiallelicBinarySubstitutionModelParser extends AbstractXMLObjectPar
 
     public Object parseXMLObject(XMLObject xo) throws XMLParseException {
 
-        Variable demethylationParam = (Variable) xo.getElementFirstChild(DEMETHYLATION_RATE);
-        //FrequencyModel freqModel = (FrequencyModel) xo.getElementFirstChild(FrequencyModelParser.FREQUENCIES);
-        XMLObject cxo = xo.getChild(FREQUENCIES);
-        FrequencyModel freqModel = (FrequencyModel) cxo.getChild(FrequencyModel.class);
-        DataType dataType = freqModel.getDataType();
-        
-        Logger.getLogger("dr.evomodel").info("Creating BiallelicBinary substitution model. Initial relative demethylation_rate = " +
+    	Variable demethylationParam=null;
+    	Variable methylationParam=new Variable.D(1,1); //Not required. Default = 1.0
+    	FrequencyModel freqModel=null;
+    	DataType dataType=null;
+    	
+        for (int i = 0; i < xo.getChildCount(); i++) {
+            XMLObject xoc = (XMLObject) xo.getChild(i);
+            if (xoc.getName().equals(DEMETHYLATION_RATE)) {
+                demethylationParam = (Variable) xoc.getChild(Parameter.class);
+            } else if (xoc.getName().equals(METHYLATION_RATE)) {
+                methylationParam = (Variable) xoc.getChild(Parameter.class);
+            } else if (xoc.getName().equals(FREQUENCIES)) {
+            	freqModel = (FrequencyModel) xoc.getChild(FrequencyModel.class);
+            	dataType = freqModel.getDataType();
+            }
+            
+        }
+
+        Logger.getLogger("dr.evomodel").info("Creating BiallelicBinary substitution model. Initial methylation_rate = " + methylationParam.getValue(0) + "demethylation_rate = " +
         		demethylationParam.getValue(0));
 
-        return new BiallelicBinarySubstitutionModel(dataType,demethylationParam,freqModel);
+        return new BiallelicBinarySubstitutionModel(dataType,methylationParam,demethylationParam,freqModel);
     }
 
     //************************************************************************
@@ -86,5 +100,7 @@ public class BiallelicBinarySubstitutionModelParser extends AbstractXMLObjectPar
              //       new XMLSyntaxRule[]{new ElementRule(FrequencyModel.class)}),
             new ElementRule(DEMETHYLATION_RATE,
                     new XMLSyntaxRule[]{new ElementRule(Variable.class)}),
+            new ElementRule(METHYLATION_RATE,
+                    new XMLSyntaxRule[]{new ElementRule(Variable.class)},true), //Not required
     };
 }

@@ -80,22 +80,28 @@ public class BiallelicBinarySubstitutionModel extends AbstractModel implements S
     protected boolean wellConditioned = true;
     private boolean storedWellConditioned = true;
     private boolean isComplex = false;
+    private double[] stationaryDistribution = null;
+    private double[] storedStationaryDistribution;
     
     private double maxConditionNumber = 10000;
     private int maxIterations = 1000;
     private boolean checkConditioning = true;
     private boolean doNormalization = true; 
 	
-	private Variable<Double> demethylationParameter; //Relative demethylation rate
-	//We fix the methylation parameter to 1 to make the demethylation rate relative to that one and do not overparamereterize the model.
-	//Important. These rates are relative to methylation events. There is a disconnect between methylation rate and generation rate, since this process is not linked to mitosis. I am unsure yet where I want to add this parameter and how it would look.
-	//Otherwise, this will be somehow compounded with the population size parameter (need to review).
+	private Variable<Double> demethylationParameter; //Demethylation rate
+	private Variable<Double> methylationParameter; //Methylation rate
+
+	//Typically, we fix the methylation parameter to 1 to make the demethylation rate relative.
+	//Important. These rates are relative to methylation events. There could be a disconnect between methylation rate and generation rate, since this process is not necessarily linked to mitosis (but most of fCpG are assumed to happen during DNA replication).
+	//This is currently compounded with the population size parameter.
     
-    public BiallelicBinarySubstitutionModel(DataType dataType, Variable demethylationParameter, FrequencyModel freqModel) {
+    public BiallelicBinarySubstitutionModel(DataType dataType, Variable methylationParameter, Variable demethylationParameter, FrequencyModel freqModel) {
     				super(BiallelicBinarySubstitutionModelParser.BiallelicBinary_MODEL);
     				this.dataType = dataType;
 
     			    setStateCount(3);
+    		        stationaryDistribution = new double[stateCount];
+    		        storedStationaryDistribution = new double[stateCount];
 
     			    if (freqModel != null) {
     			    		if (freqModel.getDataType() != dataType) {
@@ -112,6 +118,14 @@ public class BiallelicBinarySubstitutionModel extends AbstractModel implements S
     		            if (!(demethylationParameter instanceof DuplicatedParameter))
     		                demethylationParameter.addBounds(new Parameter.DefaultBounds(Double.POSITIVE_INFINITY, 0.0, 1));
     		            this.demethylationParameter = demethylationParameter;
+    				}
+    				if (methylationParameter != null) {
+    		            addVariable(methylationParameter);
+    		            if (!(methylationParameter instanceof DuplicatedParameter))
+    		                methylationParameter.addBounds(new Parameter.DefaultBounds(Double.POSITIVE_INFINITY, 0.0, 1));
+    		            this.methylationParameter = methylationParameter;
+    				} else {
+    					this.methylationParameter = new Variable.D(1,1) ;
     				}
     			    updateMatrix = true;
     }
@@ -168,6 +182,10 @@ public class BiallelicBinarySubstitutionModel extends AbstractModel implements S
         storedEvalImag = EvalImag;
         EvalImag = tmp3;
 
+        tmp3 = storedStationaryDistribution;
+        storedStationaryDistribution = stationaryDistribution;
+        stationaryDistribution = tmp3;
+
     }
 
     protected void storeState() {
@@ -176,7 +194,7 @@ public class BiallelicBinarySubstitutionModel extends AbstractModel implements S
         storedWellConditioned = wellConditioned;
         
         System.arraycopy(relativeRates, 0, storedRelativeRates, 0, rateCount);
-
+        System.arraycopy(stationaryDistribution, 0, storedStationaryDistribution, 0, stateCount);
         System.arraycopy(Eval, 0, storedEval, 0, stateCount);
         System.arraycopy(EvalImag, 0, storedEvalImag, 0, stateCount);
         
@@ -280,15 +298,16 @@ public class BiallelicBinarySubstitutionModel extends AbstractModel implements S
 
         updateMatrix = false;
         wellConditioned = true;
+        
         // compute normalization and rescale eigenvalues
 
-        //computeStationaryDistribution();
+        computeStationaryDistribution();
 
         if (doNormalization) {
             double subst = 0.0;
 
             for (i = 0; i < stateCount; i++)
-                subst += -amat[i][i]; //* stationaryDistribution[i];
+                subst += -amat[i][i] * stationaryDistribution[i];
 
 //        normalization = subst;
 
@@ -303,8 +322,8 @@ public class BiallelicBinarySubstitutionModel extends AbstractModel implements S
     public void storeIntoAmat(){
     	
 
-        double m = 1.0; //Methylation rate fixed to one
-        double d = demethylationParameter.getValue(0); //Thus, relative de-methylation rate
+        double m = methylationParameter.getValue(0); //Methylation rate
+        double d = demethylationParameter.getValue(0); //De-methylation rate
         
         double [][] r = amat;
         int i, j = 0;
@@ -427,6 +446,40 @@ public class BiallelicBinarySubstitutionModel extends AbstractModel implements S
         }
         pushiexp(iexp);
 
+    }
+    
+    public double[] getStationaryDistribution() {
+        return stationaryDistribution;
+    }
+
+    protected void computeStationaryDistribution() {
+        synchronized (this) {
+            if (updateMatrix) {
+                setupMatrix();
+            }
+        }
+
+        if (!wellConditioned) {
+           throw new RuntimeException("not well conditioned");
+        }        
+        
+        int eigenValPos = -1;
+
+        for(int i = 0; i < stateCount; i++){
+            if(Eval[i] == 0){
+                eigenValPos = i;
+                break;
+            }
+        }
+        
+        double[] empFreq = new double[stateCount];
+        //System.out.println("eq dist");
+        for(int i = 0; i < stateCount; i++){
+            empFreq[i] = Evec[i][eigenValPos]*Ievc[eigenValPos][i];
+            //System.out.println(empFreq[i]);
+
+        }
+        stationaryDistribution = empFreq;
     }
 
     /**
@@ -576,7 +629,9 @@ public class BiallelicBinarySubstitutionModel extends AbstractModel implements S
     public String toXHTML() {
         StringBuffer buffer = new StringBuffer();
 
-        buffer.append("<em>BiallelicBinary Model</em> (relative demethylation rate= ");
+        buffer.append("<em>BiallelicBinary Model</em> (methylation rate= ");
+        buffer.append(methylationParameter.getValue(0));
+        buffer.append(", relative demethylation rate= ");
         buffer.append(demethylationParameter.getValue(0));
         buffer.append(")");
 
