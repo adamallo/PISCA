@@ -90,12 +90,14 @@ public class BiallelicBinarySubstitutionModel extends AbstractModel implements S
 	
 	private Variable<Double> demethylationParameter; //Demethylation rate
 	private Variable<Double> methylationParameter; //Methylation rate
+    private Variable<Double> homozygousDemethylationParameter; //Demethylation rate
+    private Variable<Double> homozygousMethylationParameter; //Methylation rate
 
-	//Typically, we fix the methylation parameter to 1 to make the demethylation rate relative.
+	//Typically, we fix the methylation parameter to 1 to make other rates relative.
 	//Important. These rates are relative to methylation events. There could be a disconnect between methylation rate and generation rate, since this process is not necessarily linked to mitosis (but most of fCpG are assumed to happen during DNA replication).
 	//This is currently compounded with the population size parameter.
     
-    public BiallelicBinarySubstitutionModel(DataType dataType, Variable methylationParameter, Variable demethylationParameter, FrequencyModel freqModel) {
+    public BiallelicBinarySubstitutionModel(DataType dataType, Variable methylationParameter, Variable demethylationParameter, Variable homozygousMethylationParameter, Variable homozygousDemethylationParameter, FrequencyModel freqModel) {
     				super(BiallelicBinarySubstitutionModelParser.BiallelicBinary_MODEL);
     				this.dataType = dataType;
 
@@ -108,7 +110,7 @@ public class BiallelicBinarySubstitutionModel extends AbstractModel implements S
     			                throw new IllegalArgumentException("Datatypes do not match!");
     			            }
 
-    			    			this.freqModel = freqModel;
+                            this.freqModel = freqModel;
     			            addModel(freqModel);
     			            
     			    }
@@ -118,7 +120,7 @@ public class BiallelicBinarySubstitutionModel extends AbstractModel implements S
     		            if (!(demethylationParameter instanceof DuplicatedParameter))
     		                demethylationParameter.addBounds(new Parameter.DefaultBounds(Double.POSITIVE_INFINITY, 0.0, 1));
     		            this.demethylationParameter = demethylationParameter;
-    				}
+    				} 
     				if (methylationParameter != null) {
     		            addVariable(methylationParameter);
     		            if (!(methylationParameter instanceof DuplicatedParameter))
@@ -127,6 +129,22 @@ public class BiallelicBinarySubstitutionModel extends AbstractModel implements S
     				} else {
     					this.methylationParameter = new Variable.D(1,1) ;
     				}
+                    if (homozygousDemethylationParameter != null) {
+                        if (homozygousDemethylationParameter != demethylationParameter) {
+                            addVariable(homozygousDemethylationParameter);
+                            if (!(homozygousDemethylationParameter instanceof DuplicatedParameter))
+                                homozygousDemethylationParameter.addBounds(new Parameter.DefaultBounds(Double.POSITIVE_INFINITY, 0.0, 1));
+                        }
+                        this.homozygousDemethylationParameter = homozygousDemethylationParameter;
+                    }
+                    if (homozygousMethylationParameter != null) {
+                        if (homozygousMethylationParameter != methylationParameter) {
+                            addVariable(homozygousMethylationParameter);
+                            if (!(homozygousMethylationParameter instanceof DuplicatedParameter))
+                                homozygousMethylationParameter.addBounds(new Parameter.DefaultBounds(Double.POSITIVE_INFINITY, 0.0, 1));
+                        }
+                        this.homozygousMethylationParameter = homozygousMethylationParameter;
+                    }
     			    updateMatrix = true;
     }
 
@@ -324,6 +342,8 @@ public class BiallelicBinarySubstitutionModel extends AbstractModel implements S
 
         double m = methylationParameter.getValue(0); //Methylation rate
         double d = demethylationParameter.getValue(0); //De-methylation rate
+        double hoM = homozygousMethylationParameter.getValue(0); //Methylation rate
+        double hoD = homozygousDemethylationParameter.getValue(0); //De-methylation rate
         
         double [][] r = amat;
         int i, j = 0;
@@ -334,10 +354,10 @@ public class BiallelicBinarySubstitutionModel extends AbstractModel implements S
             }
         }
         
-        r[0][1]=2*m;
+        r[0][1]=2*hoM;
         r[1][0]=d;
         r[1][2]=m;
-        r[2][1]=2*d;
+        r[2][1]=2*hoD;
 
     }
     
@@ -628,11 +648,22 @@ public class BiallelicBinarySubstitutionModel extends AbstractModel implements S
 
     public String toXHTML() {
         StringBuffer buffer = new StringBuffer();
-
         buffer.append("<em>BiallelicBinary Model</em> (methylation rate= ");
         buffer.append(methylationParameter.getValue(0));
         buffer.append(", relative demethylation rate= ");
         buffer.append(demethylationParameter.getValue(0));
+        if (demethylationParameter==homozygousDemethylationParameter){
+            buffer.append(", homozygous and heterozygous methylation rates linked, ");
+        } else {
+            buffer.append(", relative homozygous demethylation rate= ");
+            buffer.append(homozygousDemethylationParameter.getValue(0));
+        }
+        if (methylationParameter==homozygousMethylationParameter){
+            buffer.append(", homozygous and heterozygous methylation rates linked, ");
+        } else {
+            buffer.append(", relative homozygous methylation rate= ");
+            buffer.append(homozygousMethylationParameter.getValue(0));
+        }
         buffer.append(")");
 
         return buffer.toString();

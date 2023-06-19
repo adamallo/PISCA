@@ -46,6 +46,8 @@ public class BiallelicBinarySubstitutionModelParser extends AbstractXMLObjectPar
 	public static final String BiallelicBinary_MODEL = "BiallelicBinaryModel";
     public static final String DEMETHYLATION_RATE= "demethylation_rate";
     public static final String METHYLATION_RATE= "methylation_rate";
+    public static final String HOMOZYGOUS_METHYLATION_RATE= "homozygousMethylation_rate";
+    public static final String HOMOZYGOUS_DEMETHYLATION_RATE= "homozygousDemethylation_rate";
     public static final String FREQUENCIES = "frequencies";
 
     public String getParserName() {
@@ -56,6 +58,8 @@ public class BiallelicBinarySubstitutionModelParser extends AbstractXMLObjectPar
 
     	Variable demethylationParam=null;
     	Variable methylationParam=new Variable.D(1,1); //Not required. Default = 1.0
+        Variable homozygousDemethylationParam=null;
+        Variable homozygousMethylationParam=null;
     	FrequencyModel freqModel=null;
     	DataType dataType=null;
     	
@@ -63,19 +67,44 @@ public class BiallelicBinarySubstitutionModelParser extends AbstractXMLObjectPar
             XMLObject xoc = (XMLObject) xo.getChild(i);
             if (xoc.getName().equals(DEMETHYLATION_RATE)) {
                 demethylationParam = (Variable) xoc.getChild(Parameter.class);
+            } else if (xoc.getName().equals(HOMOZYGOUS_DEMETHYLATION_RATE)) {
+                homozygousDemethylationParam = (Variable) xoc.getChild(Parameter.class);
+            } else if (xoc.getName().equals(HOMOZYGOUS_METHYLATION_RATE)) {
+                homozygousMethylationParam = (Variable) xoc.getChild(Parameter.class);
             } else if (xoc.getName().equals(METHYLATION_RATE)) {
                 methylationParam = (Variable) xoc.getChild(Parameter.class);
             } else if (xoc.getName().equals(FREQUENCIES)) {
-            	freqModel = (FrequencyModel) xoc.getChild(FrequencyModel.class);
-            	dataType = freqModel.getDataType();
+                    freqModel = (FrequencyModel) xoc.getChild(FrequencyModel.class);
+                    dataType = freqModel.getDataType();
             }
-            
         }
 
-        Logger.getLogger("dr.evomodel").info("Creating BiallelicBinary substitution model. Initial methylation_rate = " + methylationParam.getValue(0) + "demethylation_rate = " +
-        		demethylationParam.getValue(0));
+        //Linking parameters if not specified
+        if(homozygousDemethylationParam==null){
+            homozygousDemethylationParam=demethylationParam;
+        }
+        if(homozygousMethylationParam==null){
+            homozygousMethylationParam=methylationParam;
+        }
 
-        return new BiallelicBinarySubstitutionModel(dataType,methylationParam,demethylationParam,freqModel);
+        //Logging information
+        String outLog="Creating BiallelicBinary substitution model. Initial rates: methylation = " + methylationParam.getValue(0) + ", demethylation = " +demethylationParam.getValue(0);
+        
+        if (demethylationParam == homozygousDemethylationParam){
+            outLog = outLog + ", homozygous demethylation = demethylation (linked)";    
+        } else {
+            outLog = outLog + ", homozygous demethylation = " + homozygousDemethylationParam.getValue(0);
+        }
+
+        if (methylationParam == homozygousMethylationParam){
+            outLog = outLog + ", homozygous methylation = methylation (linked)";
+        } else {
+            outLog = outLog + ", homozygous methylation = " + homozygousMethylationParam.getValue(0);
+        }
+
+        Logger.getLogger("dr.evomodel").info(outLog);
+
+        return new BiallelicBinarySubstitutionModel(dataType,methylationParam,demethylationParam,homozygousMethylationParam,homozygousDemethylationParam,freqModel);
     }
 
     //************************************************************************
@@ -83,7 +112,7 @@ public class BiallelicBinarySubstitutionModelParser extends AbstractXMLObjectPar
     //************************************************************************
 
     public String getParserDescription() {
-        return "This element represents an instance of the BiallelicBinary (Mallo, Malley 2022) model of  evolution.";
+        return "This element represents an instance of the BiallelicBinary (Mallo, Maley 2022) model of  evolution.";
     }
 
     public Class getReturnType() {
@@ -96,11 +125,13 @@ public class BiallelicBinarySubstitutionModelParser extends AbstractXMLObjectPar
 
     private final XMLSyntaxRule[] rules = {
     		    new ElementRule(FREQUENCIES, FrequencyModel.class),
-            //new ElementRule(FrequencyModelParser.FREQUENCIES,
-             //       new XMLSyntaxRule[]{new ElementRule(FrequencyModel.class)}),
             new ElementRule(DEMETHYLATION_RATE,
                     new XMLSyntaxRule[]{new ElementRule(Variable.class)}),
             new ElementRule(METHYLATION_RATE,
+                    new XMLSyntaxRule[]{new ElementRule(Variable.class)},true), //Not required
+            new ElementRule(HOMOZYGOUS_DEMETHYLATION_RATE,
+                    new XMLSyntaxRule[]{new ElementRule(Variable.class)},true), //Not required
+            new ElementRule(HOMOZYGOUS_METHYLATION_RATE,
                     new XMLSyntaxRule[]{new ElementRule(Variable.class)},true), //Not required
     };
 }
