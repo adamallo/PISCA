@@ -1,0 +1,278 @@
+<?xml version="1.0" standalone="yes"?>
+<beast>
+<taxa id="taxa">
+	<taxon id="A">
+		<date value="74" direction="forwards" units="years"/>	</taxon>
+	<taxon id="B">
+		<date value="72" direction="forwards" units="years"/>	</taxon>
+	<taxon id="C">
+		<date value="55" direction="forwards" units="years"/>	</taxon>
+	<taxon id="D">
+		<date value="63" direction="forwards" units="years"/>	</taxon>
+	<taxon id="E">
+		<date value="65" direction="forwards" units="years"/>	</taxon>
+</taxa>
+
+<generalDataType id="biallelicBinary">
+	<state code="0"/> <!-- Genotype: 0 ; Beast State: 0 -->
+	<state code="1"/> <!-- Genotype: 1 ; Beast State: 1 -->
+	<state code="2"/> <!-- Genotype: 2 ; Beast State: 2 -->
+</generalDataType>
+
+<alignment id="alignment">
+	<dataType idref="biallelicBinary"/>
+	<sequence>
+		<taxon idref="A"/>
+		010101101202120101000212012011112111220100222110121211101010111122102110020112110002100011101121020211000220001110110000011210101111110010101101210100010121001002111001122111011211111121110112100000111221020011100102111112112000012120021010111001000111111011202012100111022222021112121111100000002201202111121022010101110211100112100110210020221020012020200000200110212102011212112111121121201111111011001212012102011111001201011100102012211222121001121212001201110001111111011022121021121100111101122221111211110111112210121121101122001221111112100111122100210021010121101111200101110120120011111110112122002112121211101101010001111211011211011102102201000021210010111021111000012110100101000011111121100201112111110110111011122220110211212110111120111101012121001011101112210012120021121121122201100011012000011010020112111110111011211102110101211211011001111100101010212210111111001220011100200211201212010212111011212000101111121111010112212101111210111012210111212202122001
+	</sequence>
+	<sequence>
+		<taxon idref="B"/>
+		010101101202210100000212012011112211220200222110121211101010111012102110020112110102100001101121020211000220001110110000011110201111110010101101110100010121001002121001122121011111112121110111111000111222020011110102110112112100011120021010121001000101111011201012100111022221021112121121101000002201202111121022010102110211100112100110200021221020011020210000200110222101011122111112122211201111111011001212012102011111001201011100102012211212121001121222001101110102111111011022121020221200111101122222101201110111211210121121100121002211001122100111122100210011010112211111200101110110120011111210112122002112121211101101010001111211012211011102102201010021210110111021111001012110100101000011111121100201112111110110111011122120110111212110111120010101012121011011101112210012120021121121122201100010012000011000020112111110111011211102110101211211011011111201101010112211111011001220011200200211201112010112211011212000101111120111011111222101111210111012210111211202112001
+	</sequence>
+	<sequence>
+		<taxon idref="C"/>
+		000102100101210100010211121011112201110200221101111111101011122110101210110212120202100012100112010211201220201120121000111110211011111011101101110100010020001001121001121122011211021121010121100101111222010111110102212102111010011121120000020001000211021010001021210112021220012112221112201001102212201111111021010102010211102211000120201012120010020020101002200110211100011222112111021200112111021021002211111112011212010211011000111112111212121002122222001211100000111122011022120121211100121101122212102001110110111211121121000111011121101112100212112200210011000011110120001100011110120011101110111221012012021211101100010001121211012211011002212211110021210111011020100101011110200001000111111111000101100212111110212011222120010112211110110020010110021121001021111112111011110021121222112201100010011110111001020112111110011002011102110101201111111011112210011010212110112011010220101200200001102201010211112012210001101110021020021220120102112211112012120201211211212001
+	</sequence>
+	<sequence>
+		<taxon idref="D"/>
+		000101100101210101010211021011121101210100221101121121101011112110101110110211120202111011100112010211211221121110120000111010211011111011001201110100020020001001110000221112011210021111010121210101111222020111120202111102112010011121120000120001000212121010001020200112021210011112211212201000002212201111011021110102010211101111000120101012210010020021101002101111111100111122112111101100121111011021002112021002011112010211111000210122111111111002122222001211111000111121011011111121211101211201122112112001110110111210111211000111001111111112000202112200210010000011110110011100122110120002101110011221011112111211101100111000121211002221001002122200110111210111011220110101012120010011000112111112001111100211111111222111222120110112211111120020010110021122001021012112110011120021021212111101100110011110112000020112102110011002011112110102201111111010111210011010201211112011111210201200100121101201010212112011110001101111020020022220120102111212012012120201211211112011
+	</sequence>
+	<sequence>
+		<taxon idref="E"/>
+		100101110200120101010211021011121201210200221101121111101011112110001110110211110202121012110112010111211220111110110100111011111011111011002101120100010120001001020000221122011210021111010021210101111222010112120102211002112110011121120001020002000212021010001121200111021210012112122112201000002211202111111021110102010211100211000120101112110010020011101002211211112100111222112111011200221121011012002211021112010112010211011100120112111111122002112222002211111001111122011021112221221100211201112111101001111110211210111111010111001211211112000112112201210010000011111121011100112110110001102110121111002111121211101100210000121211002221001012122101110011210111011020110101011110010011000111111112000111100211100111212011222120110112121111110120010110021121101121111112111011021021111212111201110010111110111010021112111110001002011102120101201110111011111211011010212220112111110210201200201011101201010211112012110101100110021020021220120102111212012012120201211111201001
+	</sequence>
+</alignment>
+
+	
+<!--	<ascertainedCharacterPatterns id="patterns">
+	        <alignment idref="alignment"/>
+	        <state code='0'/>
+	</ascertainedCharacterPatterns>	-->
+
+	<patterns id="patterns" from="1">
+        <alignment idref="alignment"/>
+    </patterns>
+	
+	<!-- A prior assumption that the population size has remained constant       -->
+	<!-- throughout the time spanned by the genealogy.                           -->
+	<constantSize id="constant" units="years">
+		<populationSize>
+			<parameter id="constant.popSize" value="1" lower="0.0"/>
+		</populationSize>
+	</constantSize>
+	<!-- Generate a random starting tree under the coalescent process            -->
+	<coalescentSimulator id="startingTree">
+		<taxa idref="taxa"/>
+		<constantSize idref="constant"/>
+	</coalescentSimulator>
+	<!-- Generate a tree model                                  -->
+	<treeModel id="treeModel">
+		<coalescentTree idref="startingTree"/>
+		<rootHeight>
+			<parameter id="treeModel.rootHeight"/>
+		</rootHeight>
+		<nodeHeights internalNodes="true">
+			<parameter id="treeModel.internalNodeHeights"/>
+		</nodeHeights>
+		<nodeHeights internalNodes="true" rootNode="true">
+			<parameter id="treeModel.allInternalNodeHeights"/>
+		</nodeHeights>
+	</treeModel>
+	<!-- Generate a coalescent likelihood                                        -->
+	<coalescentLikelihood id="coalescent">
+		<model>
+			<constantSize idref="constant"/>
+		</model>
+		<populationTree>
+			<treeModel idref="treeModel"/>
+		</populationTree>
+	</coalescentLikelihood>
+	<!-- The strict clock (Uniform rates across branches)                        -->
+	<strictClockCenancestorBranchRates id="branchRates">
+		<rate>
+			<parameter id="clock.rate" value="1"/>
+		</rate>
+	</strictClockCenancestorBranchRates>
+	<frequencyModel id="frequencies">
+		<dataType idref="biallelicBinary"/>
+		<frequencies>
+			<parameter id="biallelicBinary.frequencies" value="0.5 0 0.5"/>
+		</frequencies>
+	</frequencyModel>	
+	<BiallelicBinaryModel id="biallelicBinary_subsmodel">
+		<frequencies>
+			<frequencyModel idref="frequencies"/>
+        </frequencies>
+		<demethylation_rate>
+            <parameter id="biallelicBinary.demethylation" value="1" lower="0"/>
+        </demethylation_rate>
+        <homozygousDemethylation_rate>
+            <parameter id="biallelicBinary.homozygousDemethylation" value="1" lower="0"/>
+        </homozygousDemethylation_rate>
+        <homozygousMethylation_rate>
+            <parameter id="biallelicBinary.homozygousMethylation" value="1" lower="0"/>
+        </homozygousMethylation_rate>
+	</BiallelicBinaryModel>
+	<siteModel id="siteModel">
+		<substitutionModel>
+			<BiallelicBinaryModel idref="biallelicBinary_subsmodel"/>
+		</substitutionModel>
+	</siteModel>
+	<cenancestorTreeLikelihood id="treeLikelihood" useAmbiguities="false" heightRules="true">
+		<patterns idref="patterns"/>
+		<treeModel idref="treeModel"/>
+		<siteModel idref="siteModel"/>
+        	<cenancestorHeight>
+        		<parameter id="luca_height" value="74"/>
+        	</cenancestorHeight>
+		<cenancestorBranch>
+			<parameter id="luca_branch" value="1" upper="55" lower="0.0"/>
+			<!-- Value 1 as a safe starting value -->
+		</cenancestorBranch>
+		<strictClockCenancestorBranchRates idref="branchRates"/>
+	</cenancestorTreeLikelihood>	
+	<operators id="operators" optimizationSchedule="default">
+		<scaleOperator scaleFactor="0.5" weight="10.0">
+			<parameter idref="clock.rate"/>
+        </scaleOperator>
+		<scaleOperator scaleFactor="0.25" weight="0.25">
+            <parameter idref="biallelicBinary.demethylation"/>
+        </scaleOperator>
+        <scaleOperator scaleFactor="0.25" weight="0.25">
+            <parameter idref="biallelicBinary.homozygousMethylation"/>
+        </scaleOperator>
+        <scaleOperator scaleFactor="0.25" weight="0.25">
+            <parameter idref="biallelicBinary.homozygousDemethylation"/>
+        </scaleOperator>
+		<subtreeSlide size="2.5" gaussian="true" weight="15.0"> <!-- 2.5 years. They will be automatically optimized by BEAST though -->
+			<treeModel idref="treeModel"/>
+		</subtreeSlide>
+		<narrowExchange weight="15.0">
+			<treeModel idref="treeModel"/>
+		</narrowExchange>
+		<wideExchange weight="3.0">
+			<treeModel idref="treeModel"/>
+		</wideExchange>
+		<wilsonBalding weight="3.0">
+			<treeModel idref="treeModel"/>
+		</wilsonBalding>
+		<scaleOperator scaleFactor="0.75" weight="5.0">
+			<parameter idref="treeModel.rootHeight"/>
+		</scaleOperator>
+		<uniformOperator weight="30.0">
+			<parameter idref="treeModel.internalNodeHeights"/>
+		</uniformOperator>
+		
+		<scaleOperator scaleFactor="0.5" weight="3.0">
+			<parameter idref="constant.popSize"/>
+		</scaleOperator>
+        <upDownOperator scaleFactor="0.75" weight="5.0">
+            <up>
+                <parameter idref="clock.rate"/>
+            </up>
+            <down>
+                <parameter idref="treeModel.allInternalNodeHeights"/>
+            </down>
+        </upDownOperator>
+	</operators>
+	<!-- Define MCMC                                                             -->
+	<mcmc id="mcmc" chainLength="250000000" autoOptimize="true" operatorAnalysis="biallelicBinary4Params.ops">
+		<posterior id="posterior">
+			<prior id="prior">
+            	<coalescentLikelihood idref="coalescent"/>
+				<oneOnXPrior>
+					<parameter idref="constant.popSize"/>
+				</oneOnXPrior>
+				<!-- Clock (gain) Rate Prior. -->
+	            <logNormalPrior mean="0.1" stdev="3" offset="0.0" meanInRealSpace="true">
+	            	<parameter idref="clock.rate"/>
+	            </logNormalPrior>
+				<!-- Relative Rate priors-->                
+				<exponentialPrior mean="1.0" offset="0.0">
+                    <parameter idref="biallelicBinary.demethylation"/>
+                </exponentialPrior>
+                <exponentialPrior mean="1.0" offset="0.0">
+                    <parameter idref="biallelicBinary.homozygousMethylation"/>
+                </exponentialPrior>
+                <exponentialPrior mean="1.0" offset="0.0">
+                    <parameter idref="biallelicBinary.homozygousDemethylation"/>
+                </exponentialPrior>
+				<!-- I could also use gammaPriors to spread the weight more -->
+				
+				<!-- Cenancestor Prior on the branch since the height is fixed -->
+                <uniformPrior lower="0.0" upper="55">
+                	<parameter idref="luca_branch"/>
+                </uniformPrior>
+			</prior>
+			<likelihood id="likelihood">
+				<cenancestorTreeLikelihood idref="treeLikelihood"/>
+			</likelihood>
+		</posterior>
+		<operators idref="operators"/>
+		<!-- write log to screen                                                     -->
+		<log id="screenLog" logEvery="25000">
+			<column label="Posterior" dp="4" width="12">
+				<posterior idref="posterior"/>
+			</column>
+			<column label="Prior" dp="4" width="12">
+				<prior idref="prior"/>
+			</column>
+			<column label="Likelihood" dp="4" width="12">
+				<likelihood idref="likelihood"/>
+			</column>
+			<column label="clock_rate" sf="6" width="12">
+				<parameter idref="clock.rate"/>
+			</column>
+			<column label="rel_loss_rate" sf="6" width="12">
+				<parameter idref="biallelicBinary.demethylation"/>
+			</column>
+			<column label="rel_loss_rate" sf="6" width="12">
+				<parameter idref="biallelicBinary.homozygousDemethylation"/>
+			</column>
+			<column label="rel_loss_rate" sf="6" width="12">
+				<parameter idref="biallelicBinary.homozygousMethylation"/>
+			</column>
+			<column label="rootHeight" sf="6" width="12">
+				<parameter idref="treeModel.rootHeight"/>
+			</column>
+			<column label="luca_height" sf="6" width="12">
+				<parameter idref="luca_height"/>
+			</column>
+			<column label="luca_branch" sf="6" width="12">
+				<parameter idref="luca_branch"/>
+			</column>
+			
+		</log>
+		<!-- write log to file                                                       -->
+		<log id="fileLog" logEvery="25000" fileName="biallelicBinary4Params.log" overwrite="false">
+			<posterior idref="posterior"/>
+			<prior idref="prior"/>
+			<likelihood idref="likelihood"/>
+			<parameter idref="biallelicBinary.demethylation"/>
+			<parameter idref="biallelicBinary.homozygousDemethylation"/>
+			<parameter idref="biallelicBinary.homozygousMethylation"/>
+			<parameter idref="treeModel.rootHeight"/>
+			<parameter idref="luca_height"/>
+			<parameter idref="luca_branch"/>
+			<parameter idref="constant.popSize"/>
+			<parameter idref="clock.rate"/>
+			<coalescentLikelihood idref="coalescent"/>
+			
+		</log>
+		<!-- write tree log to file                                                  -->
+		<logTree id="treeFileLog" logEvery="25000" nexusFormat="true" fileName="biallelicBinary4Params.trees" sortTranslationTable="true">
+			<treeModel idref="treeModel"/>
+			<trait name="rate" tag="rate">
+				<strictClockCenancestorBranchRates idref="branchRates"/>
+			</trait>
+			
+			<posterior idref="posterior"/>
+		</logTree>
+	</mcmc>
+	<report>
+		<property name="timer">
+			<mcmc idref="mcmc"/>
+		</property>
+	</report>
+</beast>
+

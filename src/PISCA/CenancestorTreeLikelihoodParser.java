@@ -29,6 +29,7 @@ package PISCA;
 
 import dr.evolution.alignment.PatternList;
 import dr.evomodel.sitemodel.SiteModel;
+import dr.evomodel.substmodel.FrequencyModel;
 import dr.evomodel.tree.TreeModel;
 import dr.evomodel.treelikelihood.TipStatesModel;
 import dr.inference.model.Parameter;
@@ -49,8 +50,8 @@ public class CenancestorTreeLikelihoodParser extends AbstractXMLObjectParser {
     public static final String FORCE_RESCALING = "forceRescaling";
     public static final String CENANCESTOR_HEIGHT = "cenancestorHeight";
     public static final String CENANCESTOR_BRANCH = "cenancestorBranch";
-//    public static final String USE_AS_STATISTIC= "useAsStatistic";
-    
+    public static final String HEIGHT_RULES = "heightRules";
+
     public String getParserName() {
         return TREE_LIKELIHOOD;
     }
@@ -61,6 +62,7 @@ public class CenancestorTreeLikelihoodParser extends AbstractXMLObjectParser {
         boolean allowMissingTaxa = xo.getAttribute(ALLOW_MISSING_TAXA, false);
         boolean storePartials = xo.getAttribute(STORE_PARTIALS, true);
         boolean forceJavaCore = xo.getAttribute(FORCE_JAVA_CORE, false);
+        boolean heightRules = xo.getAttribute(HEIGHT_RULES,false);
 
         if (Boolean.valueOf(System.getProperty("java.only"))) {
             forceJavaCore = true;
@@ -69,11 +71,12 @@ public class CenancestorTreeLikelihoodParser extends AbstractXMLObjectParser {
         PatternList patternList = (PatternList) xo.getChild(PatternList.class);
         TreeModel treeModel = (TreeModel) xo.getChild(TreeModel.class);
         SiteModel siteModel = (SiteModel) xo.getChild(SiteModel.class);
+        AbstractGeneralFrequencyModel cenancestorFrequencyModel = (AbstractGeneralFrequencyModel) xo.getChild(AbstractGeneralFrequencyModel.class);
 
         CenancestorBranchRateModel branchRateModel = (CenancestorBranchRateModel) xo.getChild(CenancestorBranchRateModel.class);
-        
+
         Parameter cenancestor = (Parameter) xo.getElementFirstChild(CENANCESTOR_HEIGHT);
-        
+
         Parameter cenancestorBranch= (Parameter) xo.getElementFirstChild(CENANCESTOR_BRANCH);
 
         //Parameter AsStatistic=(Parameter) xo.getChild(USE_AS_STATISTIC);
@@ -97,8 +100,10 @@ public class CenancestorTreeLikelihoodParser extends AbstractXMLObjectParser {
                 tipStatesModel,
                 cenancestor,
                 cenancestorBranch,
+                cenancestorFrequencyModel,
                 //AsStatistic,
-                useAmbiguities, allowMissingTaxa, storePartials, forceJavaCore, forceRescaling);
+                useAmbiguities, allowMissingTaxa, storePartials, forceJavaCore, forceRescaling,
+                heightRules);
     }
 
     //************************************************************************
@@ -123,16 +128,19 @@ public class CenancestorTreeLikelihoodParser extends AbstractXMLObjectParser {
             AttributeRule.newBooleanRule(STORE_PARTIALS, true),
             AttributeRule.newBooleanRule(FORCE_JAVA_CORE, true),
             AttributeRule.newBooleanRule(FORCE_RESCALING, true),
+            AttributeRule.newBooleanRule(HEIGHT_RULES,true),
             new ElementRule(PatternList.class),
             new ElementRule(TreeModel.class),
             new ElementRule(SiteModel.class),
             new ElementRule(CenancestorBranchRateModel.class, true),
             new ElementRule(TipStatesModel.class, true),
+            new ElementRule(FrequencyModel.class, true),
             new ElementRule(CENANCESTOR_HEIGHT,
                     new XMLSyntaxRule[]{new ElementRule(Parameter.class)},true),
             new ElementRule(CENANCESTOR_BRANCH,
                     new XMLSyntaxRule[]{new ElementRule(Parameter.class)},true),
             //new ElementRule(USE_AS_STATISTIC,
-                    //new XMLSyntaxRule[]{new ElementRule(Parameter.class)},true),
+            //new XMLSyntaxRule[]{new ElementRule(Parameter.class)},true),
     };
 }
+
